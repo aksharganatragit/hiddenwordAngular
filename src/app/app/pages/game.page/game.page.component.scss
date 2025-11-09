@@ -1,0 +1,279 @@
+:host {
+  display: block;
+  background: #000;
+  color: #fff;
+  font-family: "Inter", sans-serif;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Layout */
+.game-root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Header */
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  padding: 0.75rem 1rem;
+  box-sizing: border-box;
+
+  .title {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 800;
+  }
+
+  button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.4rem;
+    cursor: pointer;
+  }
+}
+
+/* Board */
+.board-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  overflow: hidden;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.row-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.25rem;
+}
+
+.tile {
+  width: clamp(38px, 7vw, 50px);
+  height: clamp(38px, 7vw, 50px);
+  background: #222;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #fff;
+  transition: all 0.2s ease;
+  font-size: clamp(2.2rem, 3vw, 1.2rem);
+}
+
+.correct {
+  background: #2fb04f;
+}
+
+.present {
+  background: #f4b400;
+}
+
+.absent {
+  background: #555;
+}
+
+.emoji-wrap {
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emoji {
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+}
+
+/* Keyboard fixed bottom */
+.keyboard-container {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #111;
+  padding: 0.5rem 0.4rem env(safe-area-inset-bottom, 0.6rem);
+  display: flex;
+  justify-content: center;
+  z-index: 100;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.keyboard {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.35rem;
+  padding-bottom: env(safe-area-inset-bottom, 0.4rem);
+}
+
+.kb-row {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 0.3rem;
+}
+
+.key {
+  width: 100%;
+  height: clamp(44px, 6.5vw, 55px);
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.1s ease;
+}
+
+.key:active {
+  transform: scale(0.96);
+  background: #333;
+}
+
+/* Mobile full keyboard feel */
+@media (max-width: 600px) {
+  .keyboard-container {
+    background: #000;
+    padding: 0.6rem 0.3rem env(safe-area-inset-bottom, 0.6rem);
+  }
+
+  .keyboard {
+    max-width: 100%;
+    gap: 0.4rem;
+  }
+
+  .kb-row {
+    grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
+  }
+
+  .key {
+    border-radius: 6px;
+    height: clamp(45px, 8vw, 60px);
+    font-size: 1rem;
+  }
+  
+}
+
+/* =======================================================
+   🎭 EMOJI REACTIONS (Animated)
+   ======================================================= */
+
+/* Base style */
+.emoji {
+  position: relative;
+  display: inline-block;
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  vertical-align: middle;
+  transform-origin: center;
+}
+
+/* 😭 😢 Crying */
+.emoji[data-emoji="😭"],
+.emoji[data-emoji="😢"] {
+  animation: cryShake 1.4s ease-in-out infinite;
+}
+
+/* Shaky crying movement */
+@keyframes cryShake {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25%      { transform: translateY(1px) rotate(-4deg); }
+  50%      { transform: translateY(2px) rotate(4deg); }
+  75%      { transform: translateY(1px) rotate(-2deg); }
+}
+
+/* Blue tear drops 💧 */
+.emoji[data-emoji="😭"]::after,
+.emoji[data-emoji="😢"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -0.1em;
+  width: 4px;
+  height: 8px;
+  background: rgba(100, 170, 255, 0.9);
+  border-radius: 50%;
+  transform: translateX(-50%) scaleY(0);
+  opacity: 0;
+  animation: tearDrop 1.2s ease-in-out infinite;
+}
+
+@keyframes tearDrop {
+  0%   { opacity: 0; transform: translate(-50%, 0) scaleY(0); }
+  10%  { opacity: 1; transform: translate(-50%, 0) scaleY(1); }
+  70%  { opacity: 1; transform: translate(-50%, 0.8em) scaleY(1); }
+  100% { opacity: 0; transform: translate(-50%, 1.2em) scaleY(0); }
+}
+
+/* 😐 Neutral — gentle bob */
+.emoji[data-emoji="😐"] {
+  animation: neutralBob 2.4s ease-in-out infinite;
+}
+
+@keyframes neutralBob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-2px); }
+}
+
+/* 🙂 😄 Happy — cheerful bounce */
+.emoji[data-emoji="🙂"],
+.emoji[data-emoji="😄"] {
+  animation: happyBounce 1.6s ease-in-out infinite;
+}
+
+@keyframes happyBounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-5px) scale(1.1); }
+}
+
+/* 🎉 Celebration — spin & glow */
+.emoji[data-emoji="🎉"] {
+  animation: celebrateSpin 1.5s linear infinite;
+  filter: drop-shadow(0 0 4px gold);
+}
+
+@keyframes celebrateSpin {
+  0%   { transform: rotate(0deg) scale(1); }
+  50%  { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+.game-root .emoji {
+  position: relative;
+  display: inline-block;
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  vertical-align: middle;
+  transform-origin: center;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+/* 😭 😢 Crying */
+.game-root .emoji[data-emoji="😭"],
+.game-root .emoji[data-emoji="😢"] {
+  animation: cryShake 1.4s ease-in-out infinite;
+}

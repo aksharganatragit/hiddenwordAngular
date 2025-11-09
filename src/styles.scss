@@ -1,1 +1,51 @@
 /* You can add global styles to this file, and also import other style files */
+/* Reset and prevent scrollbars globally */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    background: #000; /* your default app background */
+  }
+  
+  /* Inherit box-sizing for all elements */
+  *, *::before, *::after {
+    box-sizing: inherit;
+  }
+  
+  /* Prevent scroll on mobile browsers */
+  body {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+    touch-action: none; /* disables accidental swipes/scrolls */
+    -webkit-overflow-scrolling: auto;
+    display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem; /* ✅ Global margin effect */
+  box-sizing: border-box;
+  }
+  
+  /* Root container to occupy the full screen */
+  app-root, .app-root, :host {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: calc(100vw - 3rem); /* left + right padding combined */
+    max-height: calc(100vh - 3rem); /* top + bottom padding combined */
+    overflow: hidden;
+    background: #000;
+    border-radius: 12px; /* optional, looks nice on big screens */
+  }
+  
+  /* Remove default outline, optional for cleaner UI */
+  button, a {
+    outline: none;
+  }
+  

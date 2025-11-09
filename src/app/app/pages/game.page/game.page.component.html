@@ -1,0 +1,60 @@
+<div class="game-root">
+    <header class="game-header">
+      <button class="icon" aria-label="settings" (click)="openSettings()">⚙️</button>
+      <h1 class="title">Harderword</h1>
+      <button class="help-icon" aria-label="help" (click)="openHelp()">❓</button>
+    </header>
+  
+    <main class="game-main">
+      <!-- Game Grid -->
+      <section class="board-container">
+        <div class="board">
+          <div class="row" *ngFor="let row of rows; let ri = index">
+            <div class="row-inner">
+              <div class="tiles">
+                <div
+                  class="tile"
+                  *ngFor="let cell of row.cells; let ci = index"
+                  [class.correct]="cell.state === 'correct'"
+                  [class.present]="cell.state === 'present'"
+                  [class.absent]="cell.state === 'absent'"
+                >
+                  {{ cell.letter || '' }}
+                </div>
+              </div>
+  
+              <!-- Emoji feedback -->
+              <!-- Emoji feedback -->
+<div class="emoji-wrap">
+    <span
+      *ngIf="row.score !== undefined"
+      class="emoji"
+      [attr.data-emoji]="getEmojiForScore(row.score)"
+    >
+      {{ getEmojiForScore(row.score) }}
+    </span>
+  </div>
+  
+            </div>
+          </div>
+        </div>
+      </section>
+  
+      <!-- Keyboard -->
+      <section class="keyboard-container">
+        <div class="keyboard">
+          <div class="kb-row" *ngFor="let row of keyboardRows">
+            <button
+              *ngFor="let key of row"
+              class="key"
+              (click)="onKey(key)"
+              type="button"
+            >
+              {{ key === 'Backspace' ? '⌫' : key }}
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  

@@ -1,0 +1,99 @@
+:host {
+    display: block;
+    min-height: 100vh;
+    background: #000; /* black background to match your design */
+    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+  
+  .home-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    min-height: 100vh;
+  }
+  
+  .card {
+    text-align: center;
+    max-width: 720px;
+    width: 100%;
+    padding: 3rem 1.5rem;
+    border-radius: 12px;
+    /* subtle shadow for depth on large screens */
+    box-shadow: 0 6px 24px rgba(0,0,0,0.6);
+    background: transparent; /* we keep page black, card is visually centered */
+  }
+  
+  /* Logo */
+  .logo {
+    width: 68px;
+    height: auto;
+    display: block;
+    margin: 0 auto 1rem;
+  }
+  
+  /* Title */
+  .title {
+    font-size: 2.25rem;
+    margin: 0 0 .5rem;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+  }
+  
+  /* Subtitle / description */
+  .subtitle {
+    color: rgba(255,255,255,0.75);
+    margin: 0 0 2rem;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+  
+  /* Actions */
+  .actions {
+    display: flex;
+    justify-content: center;
+  }
+  
+  /* Play button */
+  .btn {
+    display: inline-block;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 999px;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  
+  /* specific play style */
+  .play-btn {
+    background: linear-gradient(180deg,#2aa9ff,#1b88d9);
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(27,136,217,0.18);
+  }
+  
+  .play-btn:hover,
+  .play-btn:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(27,136,217,0.22);
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 480px) {
+    .card {
+      padding: 2rem 1rem;
+    }
+    .title {
+      font-size: 1.6rem;
+    }
+    .logo {
+      width: 56px;
+    }
+    .play-btn {
+      padding: 0.65rem 1.4rem;
+    }
+  }
+  
