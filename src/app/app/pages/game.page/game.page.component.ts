@@ -54,7 +54,7 @@ export class GamePageComponent {
   }
 
   onKey(key: string) {
-    if (key === 'Enter') return this.submitGuess();
+    if (key === 'Ent') return this.submitGuess();
     if (key === 'Backspace') return this.deleteLetter();
 
     if (/^[A-Z]$/.test(key) && this.currentCol < this.cols) {
@@ -111,7 +111,7 @@ export class GamePageComponent {
   @HostListener('window:keydown', ['$event'])
   handleKeyPress(event: KeyboardEvent) {
     const key = event.key.toUpperCase();
-    if (key === 'ENTER') this.onKey('Enter');
+    if (key === 'ENT') this.onKey('Enter');
     else if (key === 'BACKSPACE') this.onKey('Backspace');
     else if (/^[A-Z]$/.test(key)) this.onKey(key);
   }
