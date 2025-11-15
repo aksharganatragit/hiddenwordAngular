@@ -1,1 +1,22 @@
-<p>end-modal works!</p>
+<div class="modal-backdrop" (click)="closeModal()"></div>
+
+<div class="modal-window">
+
+  <button class="close-btn" (click)="closeModal()">✖</button>
+
+  <h2>Statistics</h2>
+
+  <div class="stats-box">
+    <div><b>{{ stats.played }}</b><br>Played</div>
+    <div><b>{{ stats.winPercent }}</b><br>Win %</div>
+    <div><b>{{ stats.streak }}</b><br>Current Streak</div>
+    <div><b>{{ stats.maxStreak }}</b><br>Max Streak</div>
+  </div>
+
+  <h3>NEXT WORD</h3>
+
+  <h1>{{ countdownText }}</h1>
+
+  <button class="share-btn">🔗 SHARE</button>
+
+</div>

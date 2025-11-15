@@ -1,11 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-help-modal',
-  imports: [],
+  standalone: true,
   templateUrl: './help-modal.component.html',
-  styleUrl: './help-modal.component.scss'
+  styleUrls: ['./help-modal.component.scss'],
 })
 export class HelpModalComponent {
-
+  @Output() close = new EventEmitter<void>();
+  onClose() {
+    this.close.emit();
+  }
 }

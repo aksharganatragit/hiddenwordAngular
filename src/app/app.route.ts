@@ -22,5 +22,13 @@ export const routes: Routes = [
         (m) => m.GamePageComponent
       ),
   },
+  {
+  path: 'help',
+  loadComponent: () =>
+    import('./app/pages/help.page/help.page.component').then(
+      (m) => m.HelpPageComponent
+    ),
+},
+
   { path: '**', redirectTo: '' },
 ];

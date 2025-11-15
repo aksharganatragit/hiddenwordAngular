@@ -1,13 +1,25 @@
 <div class="game-root">
     <header class="game-header">
-      <button class="icon" aria-label="settings" (click)="openSettings()">⚙️</button>
-      <h1 class="title">Harderword</h1>
-      <button class="help-icon" aria-label="help" (click)="openHelp()">❓</button>
-    </header>
+        <!-- Help icon on the left -->
+     <button class="help-icon" (click)="openHelp()">❓</button>
+
+      
+        <!-- Centered title -->
+        <h1 class="title">Hidden Word</h1>
+      
+        <!-- Settings icon on the right -->
+<button class="icon" aria-label="Leaderboard" (click)="openEndModal()">🏆</button>
+
+      </header>
+      
   
     <main class="game-main">
       <!-- Game Grid -->
+        <div class="error-popup" *ngIf="errorMessage">
+  {{ errorMessage }}
+</div>
       <section class="board-container">
+       
         <div class="board">
           <div class="row" *ngFor="let row of rows; let ri = index">
             <div class="row-inner">
@@ -25,7 +37,7 @@
   
               <!-- Emoji feedback -->
               <!-- Emoji feedback -->
-<div class="emoji-wrap">
+<!-- <div class="emoji-wrap">
     <span
       *ngIf="row.score !== undefined"
       class="emoji"
@@ -33,7 +45,7 @@
     >
       {{ getEmojiForScore(row.score) }}
     </span>
-  </div>
+  </div> -->
   
             </div>
           </div>
@@ -57,4 +69,5 @@
       </section>
     </main>
   </div>
-  
+  <app-help-modal *ngIf="showHelp" (close)="closeHelp()"></app-help-modal>
+  <app-end-modal *ngIf="showEndModal" (close)="showEndModal = false"></app-end-modal>
