@@ -317,78 +317,30 @@
 /* Small tablets and mobile landscape */
 @media (max-width: 767px) {
   .board {
-    gap: 3px;
-  }
-
-  .tiles {
-    gap: 3px;
-  }
-
-  .tile {
-    width: 36px;
-    height: 36px;
-    font-size: 1.3rem;
-  }
-
-  .emoji-wrap {
-    width: 32px;
-    margin-left: 5px;
-  }
-
-  .emoji {
-    font-size: 1.4rem;
-  }
-
-  .keyboard-container {
-    padding: 6px 0 10px 0;
-  }
-
-  .kb-row {
     gap: 4px;
-    margin-bottom: 4px;
-  }
-
-  .key {
-    padding: 10px 4px;
-    font-size: 1rem;
-    max-width: 45px;
-  }
-
-  .kb-row button:first-child,
-  .kb-row button:last-child {
-    flex: 1.5;
-    max-width: 65px;
-    font-size: 0.9rem;
-  }
-}
-
-/* Small phones */
-@media (max-width: 480px) {
-  .board {
-    gap: 2px;
   }
 
   .tiles {
-    gap: 2px;
+    gap: 4px;
   }
 
   .tile {
-    width: 32px;
-    height: 32px;
-    font-size: 1.2rem;
+    width: 42px;
+    height: 42px;
+    font-size: 1.5rem;
   }
 
   .emoji-wrap {
-    width: 28px;
-    margin-left: 4px;
+    width: 34px;
+    margin-left: 6px;
   }
 
   .emoji {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
   }
 
   .keyboard-container {
-    padding: 4px 0 8px 0;
+    padding: 5px 0 8px 0;
   }
 
   .kb-row {
@@ -397,16 +349,64 @@
   }
 
   .key {
-    font-size: 0.9rem;
-    max-width: 40px;
     padding: 9px 3px;
+    font-size: 0.95rem;
+    max-width: 42px;
   }
 
   .kb-row button:first-child,
   .kb-row button:last-child {
     flex: 1.5;
-    max-width: 58px;
-    font-size: 0.8rem;
+    max-width: 62px;
+    font-size: 0.85rem;
+  }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  .board {
+    gap: 3px;
+  }
+
+  .tiles {
+    gap: 3px;
+  }
+
+  .tile {
+    width: 38px;
+    height: 38px;
+    font-size: 1.4rem;
+  }
+
+  .emoji-wrap {
+    width: 30px;
+    margin-left: 5px;
+  }
+
+  .emoji {
+    font-size: 1.3rem;
+  }
+
+  .keyboard-container {
+    padding: 4px 0 6px 0;
+  }
+
+  .kb-row {
+    gap: 2px;
+    margin-bottom: 2px;
+  }
+
+  .key {
+    font-size: 0.85rem;
+    max-width: 38px;
+    padding: 8px 2px;
+  }
+
+  .kb-row button:first-child,
+  .kb-row button:last-child {
+    flex: 1.5;
+    max-width: 56px;
+    font-size: 0.75rem;
   }
 }
 
@@ -421,22 +421,22 @@
   }
 
   .tile {
-    width: 28px;
-    height: 28px;
-    font-size: 1.1rem;
+    width: 34px;
+    height: 34px;
+    font-size: 1.2rem;
   }
 
   .emoji-wrap {
-    width: 26px;
-    margin-left: 3px;
+    width: 28px;
+    margin-left: 4px;
   }
 
   .emoji {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
   }
 
   .keyboard-container {
-    padding: 3px 0 6px 0;
+    padding: 3px 0 5px 0;
   }
 
   .kb-row {
@@ -445,15 +445,15 @@
   }
 
   .key {
-    font-size: 0.85rem;
-    max-width: 36px;
-    padding: 8px 2px;
+    font-size: 0.8rem;
+    max-width: 34px;
+    padding: 7px 2px;
   }
 
   .kb-row button:first-child,
   .kb-row button:last-child {
     flex: 1.5;
-    max-width: 52px;
-    font-size: 0.75rem;
+    max-width: 50px;
+    font-size: 0.7rem;
   }
 }
