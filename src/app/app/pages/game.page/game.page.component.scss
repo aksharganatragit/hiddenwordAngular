@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  height: 100dvh; /* Dynamic viewport height for mobile */
+  height: 100dvh;
   width: 100%;
   overflow: hidden;
   background: #000;
@@ -17,17 +17,21 @@
 }
 
 .error-popup {
+  position: absolute;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
   color: #ff4a4a;
   font-weight: 700;
   font-size: 1.1rem;
   text-align: center;
-  margin-top: 10px;
   animation: pop 0.2s ease-out;
+  z-index: 100;
 }
 
 @keyframes pop {
-  from { opacity: 0; transform: scale(0.9); }
-  to   { opacity: 1; transform: scale(1); }
+  from { opacity: 0; transform: translateX(-50%) scale(0.9); }
+  to   { opacity: 1; transform: translateX(-50%) scale(1); }
 }
 
 /* =========================
@@ -63,7 +67,6 @@
   padding: 0 1px;
 }
 
-/* TOP (orange → yellow) */
 .game-logo .top {
   background: linear-gradient(180deg, #ffa133, #ff6b00);
   -webkit-background-clip: text;
@@ -71,22 +74,11 @@
   color: transparent;
 }
 
-/* BOTTOM (red → deep red) */
 .game-logo .bottom {
   background: linear-gradient(180deg, #ff3a1a, #b00000);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-}
-
-@media (max-width: 400px) {
-  .game-logo {
-    font-size: 22px;
-    letter-spacing: 1px;
-  }
-  .game-header {
-    padding: 6px 10px;
-  }
 }
 
 .help-icon,
@@ -146,18 +138,21 @@
 .board-container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-  padding: 10px;
+  flex-shrink: 0;
+  padding: 20px 10px 10px 10px;
 }
 
 .board {
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+.row {
+  margin: 0;
+  padding: 0;
 }
 
 .row-inner {
@@ -186,7 +181,6 @@
   font-weight: bold;
 }
 
-/* States */
 .tile.correct {
   background: #4CAF50;
   border-color: #4CAF50;
@@ -200,7 +194,6 @@
   border-color: #444;
 }
 
-/* Emoji feedback box */
 .emoji-wrap {
   width: 45px;
   margin-left: 8px;
@@ -218,14 +211,17 @@
    ========================= */
 .keyboard-container {
   display: flex;
-  justify-content: center;
-  padding: 12px 0 16px 0;
-  flex-shrink: 0;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex: 1;
+  padding: 0 0 20px 0;
+  min-height: 0;
 }
 
 .keyboard {
   width: 100%;
   max-width: 550px;
+  margin: 0 auto;
   padding: 0 10px;
 }
 
@@ -257,7 +253,6 @@
   transform: translateY(-2px);
 }
 
-/* Special keys - Enter and Backspace */
 .kb-row button:first-child,
 .kb-row button:last-child {
   flex: 1.5;
@@ -269,167 +264,112 @@
   transform: scale(0.96);
 }
 
+.kb-row:last-child {
+  margin-bottom: 0;
+}
+
 /* =========================
-   RESPONSIVE DESIGN
+   RESPONSIVE - MOBILE FIRST
    ========================= */
 
-/* Tablets and iPads (landscape) */
-@media (min-width: 768px) and (max-width: 1024px) {
-  .tile {
-    width: 55px;
-    height: 55px;
-    font-size: 1.7rem;
+/* Very small phones - 320-360px */
+@media (max-width: 360px) {
+  .game-header {
+    padding: 6px 8px;
   }
-  
-  .tiles {
-    gap: 7px;
-  }
-  
-  .board {
-    gap: 7px;
-  }
-}
 
-/* Large desktop screens */
-@media (min-width: 1400px) {
-  .tile {
-    width: 60px;
-    height: 60px;
-    font-size: 2rem;
+  .game-logo {
+    font-size: 20px;
+    letter-spacing: 1px;
   }
-  
-  .tiles {
-    gap: 8px;
-  }
-  
-  .board {
-    gap: 8px;
-  }
-  
-  .keyboard {
-    max-width: 600px;
-  }
-  
-  .key {
-    max-width: 60px;
-    font-size: 1.2rem;
-  }
-}
 
-/* Small tablets and mobile landscape */
-@media (max-width: 767px) and (min-width: 481px) {
+  .help-icon,
+  .icon {
+    width: 36px;
+    height: 36px;
+    font-size: 1.3rem;
+  }
+
   .board-container {
-    padding: 8px;
+    padding: 12px 5px 6px 5px;
   }
 
   .board {
-    gap: 5px;
+    gap: 3px;
   }
 
   .tiles {
-    gap: 5px;
+    gap: 3px;
   }
 
   .tile {
-    width: 48px;
-    height: 48px;
-    font-size: 1.5rem;
+    width: 42px;
+    height: 42px;
+    font-size: 1.3rem;
+    border-radius: 5px;
   }
 
   .emoji-wrap {
-    width: 40px;
-    margin-left: 6px;
+    width: 34px;
+    margin-left: 3px;
   }
 
   .emoji {
-    font-size: 1.6rem;
+    font-size: 1.2rem;
   }
 
   .keyboard-container {
-    padding: 10px 0 12px 0;
+    padding: 0 0 8px 0;
+  }
+
+  .keyboard {
+    padding: 0 6px;
   }
 
   .kb-row {
-    gap: 4px;
+    gap: 2.5px;
     margin-bottom: 5px;
   }
 
   .key {
-    padding: 12px 4px;
-    font-size: 1rem;
-    max-width: 45px;
+    font-size: 0.9rem;
+    max-width: 36px;
+    padding: 14px 2px;
+    border-radius: 5px;
   }
 
   .kb-row button:first-child,
   .kb-row button:last-child {
-    flex: 1.5;
-    max-width: 65px;
-    font-size: 0.85rem;
+    flex: 1.8;
+    max-width: 56px;
+    font-size: 0.75rem;
+    padding: 14px 3px;
+  }
+
+  .kb-row:last-child {
+    margin-bottom: 0;
   }
 }
 
-/* Mobile phones - portrait */
-@media (max-width: 480px) {
-  .board-container {
-    padding: 6px;
-    flex: 1.2;
+/* Small phones - 361-400px */
+@media (min-width: 361px) and (max-width: 400px) {
+  .game-header {
+    padding: 7px 10px;
   }
 
-  .board {
-    gap: 4px;
+  .game-logo {
+    font-size: 22px;
+    letter-spacing: 1px;
   }
 
-  .tiles {
-    gap: 4px;
-  }
-
-  .tile {
-    width: 46px;
-    height: 46px;
-    font-size: 1.4rem;
-    border-radius: 6px;
-  }
-
-  .emoji-wrap {
+  .help-icon,
+  .icon {
     width: 38px;
-    margin-left: 5px;
+    height: 38px;
   }
 
-  .emoji {
-    font-size: 1.4rem;
-  }
-
-  .keyboard-container {
-    padding: 8px 0 10px 0;
-    flex-shrink: 0;
-  }
-
-  .kb-row {
-    gap: 3px;
-    margin-bottom: 4px;
-  }
-
-  .key {
-    font-size: 0.95rem;
-    max-width: 40px;
-    padding: 11px 3px;
-    border-radius: 6px;
-  }
-
-  .kb-row button:first-child,
-  .kb-row button:last-child {
-    flex: 1.6;
-    max-width: 60px;
-    font-size: 0.8rem;
-    padding: 11px 4px;
-  }
-}
-
-/* Small phones */
-@media (max-width: 400px) {
   .board-container {
-    padding: 5px;
-    flex: 1.3;
+    padding: 14px 6px 7px 6px;
   }
 
   .board {
@@ -441,8 +381,8 @@
   }
 
   .tile {
-    width: 44px;
-    height: 44px;
+    width: 45px;
+    height: 45px;
     font-size: 1.35rem;
     border-radius: 5px;
   }
@@ -457,18 +397,22 @@
   }
 
   .keyboard-container {
-    padding: 6px 0 8px 0;
+    padding: 0 0 10px 0;
+  }
+
+  .keyboard {
+    padding: 0 8px;
   }
 
   .kb-row {
-    gap: 2.5px;
-    margin-bottom: 3.5px;
+    gap: 3px;
+    margin-bottom: 5px;
   }
 
   .key {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     max-width: 38px;
-    padding: 10px 2px;
+    padding: 15px 2px;
     border-radius: 5px;
   }
 
@@ -476,69 +420,232 @@
   .kb-row button:last-child {
     flex: 1.7;
     max-width: 58px;
-    font-size: 0.75rem;
-    padding: 10px 3px;
+    font-size: 0.8rem;
+    padding: 15px 3px;
+  }
+
+  .kb-row:last-child {
+    margin-bottom: 0;
   }
 }
 
-/* Very small phones */
-@media (max-width: 360px) {
-  .help-icon,
-  .icon {
-    width: 38px;
-    height: 38px;
-  }
-
+/* Standard phones - 401-480px */
+@media (min-width: 401px) and (max-width: 480px) {
   .board-container {
-    padding: 4px;
-    flex: 1.4;
+    padding: 16px 8px 8px 8px;
   }
 
   .board {
-    gap: 3px;
+    gap: 4px;
   }
 
   .tiles {
-    gap: 3px;
+    gap: 4px;
   }
 
   .tile {
-    width: 40px;
-    height: 40px;
-    font-size: 1.25rem;
-    border-radius: 5px;
+    width: 48px;
+    height: 48px;
+    font-size: 1.45rem;
+    border-radius: 6px;
   }
 
   .emoji-wrap {
-    width: 32px;
-    margin-left: 3px;
+    width: 38px;
+    margin-left: 5px;
   }
 
   .emoji {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
   }
 
   .keyboard-container {
-    padding: 5px 0 6px 0;
+    padding: 0 0 12px 0;
   }
 
   .kb-row {
-    gap: 2px;
-    margin-bottom: 3px;
+    gap: 4px;
+    margin-bottom: 5px;
   }
 
   .key {
-    font-size: 0.85rem;
-    max-width: 35px;
-    padding: 9px 2px;
-    border-radius: 4px;
+    font-size: 1rem;
+    max-width: 42px;
+    padding: 16px 3px;
+    border-radius: 6px;
   }
 
   .kb-row button:first-child,
   .kb-row button:last-child {
-    flex: 1.8;
-    max-width: 54px;
-    font-size: 0.7rem;
-    padding: 9px 2px;
+    flex: 1.6;
+    max-width: 62px;
+    font-size: 0.85rem;
+    padding: 16px 4px;
+  }
+
+  .kb-row:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* Large phones / Small tablets - 481-767px */
+@media (min-width: 481px) and (max-width: 767px) {
+  .board-container {
+    padding: 18px 10px 10px 10px;
+  }
+
+  .board {
+    gap: 5px;
+  }
+
+  .tiles {
+    gap: 5px;
+  }
+
+  .tile {
+    width: 52px;
+    height: 52px;
+    font-size: 1.55rem;
+  }
+
+  .emoji-wrap {
+    width: 42px;
+    margin-left: 6px;
+  }
+
+  .emoji {
+    font-size: 1.6rem;
+  }
+
+  .keyboard-container {
+    padding: 0 0 14px 0;
+  }
+
+  .kb-row {
+    gap: 5px;
+    margin-bottom: 6px;
+  }
+
+  .key {
+    padding: 16px 4px;
+    font-size: 1.05rem;
+    max-width: 46px;
+  }
+
+  .kb-row button:first-child,
+  .kb-row button:last-child {
+    flex: 1.5;
+    max-width: 66px;
+    font-size: 0.9rem;
+  }
+
+  .kb-row:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* Tablets - 768-1024px */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .board-container {
+    padding: 18px 10px 8px 10px;
+    overflow-y: auto;
+  }
+
+  .tile {
+    width: 46px;
+    height: 46px;
+    font-size: 1.4rem;
+  }
+  
+  .tiles {
+    gap: 5px;
+  }
+  
+  .board {
+    gap: 4px;
+  }
+
+  .keyboard-container {
+    padding: 0 0 16px 0;
+    flex-shrink: 0;
+  }
+
+  .keyboard {
+    max-width: 480px;
+  }
+
+  .key {
+    max-width: 44px;
+    padding: 11px 4px;
+    font-size: 0.95rem;
+  }
+
+  .kb-row button:first-child,
+  .kb-row button:last-child {
+    flex: 1.5;
+    max-width: 64px;
+    font-size: 0.8rem;
+  }
+
+  .kb-row {
+    gap: 4px;
+    margin-bottom: 5px;
+  }
+
+  .kb-row:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* Large screens - 1025px+ */
+@media (min-width: 1025px) {
+  .board-container {
+    padding: 22px 10px 12px 10px;
+    overflow-y: auto;
+  }
+
+  .tile {
+    width: 50px;
+    height: 50px;
+    font-size: 1.55rem;
+  }
+  
+  .tiles {
+    gap: 6px;
+  }
+  
+  .board {
+    gap: 5px;
+  }
+  
+  .keyboard {
+    max-width: 500px;
+  }
+  
+  .key {
+    max-width: 46px;
+    padding: 12px 5px;
+    font-size: 1rem;
+  }
+
+  .kb-row button:first-child,
+  .kb-row button:last-child {
+    flex: 1.5;
+    max-width: 68px;
+    font-size: 0.82rem;
+  }
+
+  .keyboard-container {
+    padding: 0 0 20px 0;
+    flex-shrink: 0;
+  }
+
+  .kb-row {
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+
+  .kb-row:last-child {
+    margin-bottom: 0;
   }
 }
