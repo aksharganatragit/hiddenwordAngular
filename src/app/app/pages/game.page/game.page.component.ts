@@ -103,24 +103,52 @@ export class GamePageComponent implements OnInit {
   }
 
   /** 🧠 GENERATE TODAY'S WORD */
-  getDailyWord(): string {
-    const todayKey = new Date().toDateString();
-    const stored = localStorage.getItem("daily_word");
+/** 🧠 GENERATE TODAY'S WORD */
+getDailyWord(): string {
+  const todayKey = new Date().toDateString();
+  const stored = localStorage.getItem("daily_word");
 
-    if (stored) {
-      const data = JSON.parse(stored);
-      if (data.date === todayKey) return data.word;
-    }
-
-    const word = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)];
-
-    localStorage.setItem("daily_word", JSON.stringify({
-      date: todayKey,
-      word
-    }));
-
-    return word;
+  if (stored) {
+    const data = JSON.parse(stored);
+    if (data.date === todayKey) return data.word;
   }
+
+  // 🎯 DATE-BASED INDEX - Same word for everyone on same day!
+  const epoch = new Date('2024-01-01'); // Your game start date
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  const daysSinceEpoch = Math.floor((today.getTime() - epoch.getTime()) / (1000 * 60 * 60 * 24));
+  const wordIndex = daysSinceEpoch % WORD_LIST.length;
+  
+  const word = WORD_LIST[wordIndex];
+
+  localStorage.setItem("daily_word", JSON.stringify({
+    date: todayKey,
+    word
+  }));
+
+  return word;
+}
+
+  // getDailyWord(): string {
+  //   const todayKey = new Date().toDateString();
+  //   const stored = localStorage.getItem("daily_word");
+
+  //   if (stored) {
+  //     const data = JSON.parse(stored);
+  //     if (data.date === todayKey) return data.word;
+  //   }
+
+  //   const word = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)];
+
+  //   localStorage.setItem("daily_word", JSON.stringify({
+  //     date: todayKey,
+  //     word
+  //   }));
+
+  //   return word;
+  // }
 
   /** HELP MODAL **/
   openHelp() { this.showHelp = true; }
