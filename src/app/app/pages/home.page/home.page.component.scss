@@ -1,99 +1,129 @@
 :host {
-    display: block;
-    min-height: 100vh;
-    background: #000; /* black background to match your design */
-    color: #fff;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  }
-  
-  .home-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    min-height: 100vh;
-  }
-  
+  display: block;
+  min-height: 100vh;
+  background: #000;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* Center wrapper */
+.home-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+/* Card Block */
+.card {
+  text-align: center;
+  max-width: 720px;
+  width: 100%;
+  padding: 3rem 1.5rem;
+  border-radius: 12px;
+  background: transparent;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.6);
+}
+
+/* =========================================================
+   🔥 CUSTOM LOGO TEXT (Matches your image exactly)
+ ========================================================= */
+.logo-text {
+font-family: "Montserrat", Arial, sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -2px;
+  text-align: center;
+  font-size: 96px;
+  margin-top: 14px;
+  margin-bottom: 0;
+  position: relative;
+}
+.logo-text.overlap-logo .bottom {
+  position: relative;
+  top: -0.6em;     /* ⬅ move WORD upward over HIDDEN */
+}
+
+.logo-text .top {
+  display: block;
+  background: linear-gradient(180deg, #ff6b00 0%, #ff9a2a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.logo-text .bottom {
+  display: block;
+  background: linear-gradient(180deg, #ff2a00 0%, #cc0000 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Optional: fine-tune vertical alignment to match PNG perfectly */
+.logo-text {
+  transform: translateY(-10px);
+}
+
+/* ============================================= */
+/* Subtitle */
+.subtitle {
+  color: rgba(255,255,255,0.75);
+  margin: 0 0 2rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* Play button section */
+.actions {
+  display: flex;
+  justify-content: center;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  text-decoration: none;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  transition: 0.12s ease-in-out;
+  border: none;
+}
+
+/* Blue PLAY button */
+.play-btn {
+  background: linear-gradient(180deg, #2aa9ff, #1b88d9);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(27,136,217,0.18);
+}
+
+.play-btn:hover,
+.play-btn:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(27,136,217,0.25);
+}
+
+/* =========================================================
+   📱 MOBILE RESPONSIVE
+ ========================================================= */
+@media (max-width: 480px) {
   .card {
-    text-align: center;
-    max-width: 720px;
-    width: 100%;
-    padding: 3rem 1.5rem;
-    border-radius: 12px;
-    /* subtle shadow for depth on large screens */
-    box-shadow: 0 6px 24px rgba(0,0,0,0.6);
-    background: transparent; /* we keep page black, card is visually centered */
+    padding: 2rem 1rem;
   }
-  
-  /* Logo */
-  .logo {
-    width: 68px;
-    height: auto;
-    display: block;
-    margin: 0 auto 1rem;
+
+  .logo-text {
+    font-size: 42px;
+    letter-spacing: 0px;
   }
-  
-  /* Title */
-  .title {
-    font-size: 2.25rem;
-    margin: 0 0 .5rem;
-    letter-spacing: 0.5px;
-    font-weight: 700;
-  }
-  
-  /* Subtitle / description */
+
   .subtitle {
-    color: rgba(255,255,255,0.75);
-    margin: 0 0 2rem;
-    font-size: 0.95rem;
-    line-height: 1.4;
+    font-size: 0.85rem;
   }
-  
-  /* Actions */
-  .actions {
-    display: flex;
-    justify-content: center;
-  }
-  
-  /* Play button */
-  .btn {
-    display: inline-block;
-    text-decoration: none;
-    cursor: pointer;
-    border: none;
-    padding: 0.8rem 2rem;
-    border-radius: 999px;
-    font-weight: 600;
-    letter-spacing: 0.6px;
-    transition: transform .12s ease, box-shadow .12s ease;
-  }
-  
-  /* specific play style */
+
   .play-btn {
-    background: linear-gradient(180deg,#2aa9ff,#1b88d9);
-    color: #fff;
-    box-shadow: 0 6px 18px rgba(27,136,217,0.18);
+    padding: 0.65rem 1.4rem;
   }
-  
-  .play-btn:hover,
-  .play-btn:focus {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 22px rgba(27,136,217,0.22);
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 480px) {
-    .card {
-      padding: 2rem 1rem;
-    }
-    .title {
-      font-size: 1.6rem;
-    }
-    .logo {
-      width: 56px;
-    }
-    .play-btn {
-      padding: 0.65rem 1.4rem;
-    }
-  }
-  
+}
