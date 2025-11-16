@@ -1,4 +1,10 @@
 /* ROOT LAYOUT */
+
+* {
+  font-family: "Luckiest Guy", "Fredoka One", "Comic Sans MS", cursive !important;
+  font-weight: 900 !important;
+}
+
 .game-root {
   display: flex;
   flex-direction: column;
@@ -72,17 +78,35 @@
 }
 
 .game-logo .top {
-  background: linear-gradient(180deg, #ffa133, #ff6b00);
+  background: linear-gradient(
+    180deg,
+    #ffe600 0%,     /* Neon yellow highlight */
+    #ffb300 30%,    /* Cartoon yellow */
+    #ff7a00 65%,    /* Hot orange */
+    #ff3d00 100%    /* Fiery orange/red */
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  filter: drop-shadow(0px 0px 6px rgba(255, 190, 0, 0.7));
 }
 
 .game-logo .bottom {
-  background: linear-gradient(180deg, #ff3a1a, #b00000);
+  font-size: 1.25em;                    /* ⬅️ Bigger text */
+  font-weight: 900;                     /* Extra bold */
+  letter-spacing: 1.5px;                /* Slightly wider */
+  background: linear-gradient(
+    180deg,
+    #ff5a00 0%,       /* Brighter bright orange/red */
+    #ff2400 40%,      /* More saturated cartoon red */
+    #d00000 75%,      /* Deeper red */
+    #7a0000 100%      /* Darker shadow red */
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  filter: drop-shadow(0px 0px 9px rgba(255, 30, 20, 0.9)); /* Stronger glow */
+  transform: scale(1.05);               /* Slight size boost */
 }
 
 .help-icon,
@@ -187,18 +211,25 @@
 }
 
 .tile.correct {
-  background: #4CAF50;
-  border-color: #4CAF50;
+  background: #00FF57 !important;
+  border-color: #00FF57 !important;
+  box-shadow: 0 0 10px #00FF57;
+  color: black !important;
 }
+/* 🟨 PRESENT TILE */
 .tile.present {
-  background: #c9a900;
-  border-color: #c9a900;
-}
-.tile.absent {
-  background: #444;
-  border-color: #444;
+  background: #FFD800 !important;
+  border-color: #FFD800 !important;
+  box-shadow: 0 0 10px #FFD800;
+  color: black !important;
 }
 
+/* ⬛ ABSENT TILE */
+.tile.absent {
+  background: #2B2B2B !important;
+  border-color: #2B2B2B !important;
+  opacity: 0.75;
+}
 .emoji-wrap {
   width: 45px;
   margin-left: 8px;
@@ -211,6 +242,16 @@
   font-size: 1.8rem;
 }
 
+.tile.correct,
+.tile.present,
+.tile.absent {
+  animation: popIn 0.25s ease-out;
+}
+
+@keyframes popIn {
+  0%   { transform: scale(0.8); }
+  100% { transform: scale(1); }
+}
 /* =========================
    KEYBOARD
    ========================= */
