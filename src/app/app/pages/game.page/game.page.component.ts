@@ -57,13 +57,19 @@ export class GamePageComponent implements OnInit {
     }
 
     /** ⏳ AUTO RESET IF MIDNIGHT PASSED WHILE TAB IS OPEN */
-    setInterval(() => {
-      if (localStorage.getItem("last_played") !== new Date().toDateString()) {
-        localStorage.removeItem("board_state");
-        localStorage.removeItem("daily_word");
-        location.reload();
-      }
-    }, 60000); // check every 1 minute
+    const storedDailyWord = localStorage.getItem("daily_word");
+    if (storedDailyWord) {
+      const dailyWordData = JSON.parse(storedDailyWord);
+      const currentDate = new Date().toDateString();
+      
+      setInterval(() => {
+        if (dailyWordData.date !== new Date().toDateString()) {
+          localStorage.removeItem("board_state");
+          localStorage.removeItem("daily_word");
+          location.reload();
+        }
+      }, 60000); // check every 1 minute
+    }
   }
 
   /** 🎯 RESTORE PREVIOUS BOARD */
