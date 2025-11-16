@@ -235,17 +235,18 @@ export class GamePageComponent implements OnInit {
   }
 
   /** LISTEN TO KEYBOARD */
-  @HostListener('window:keydown', ['$event'])
-  handleKeyPress(event: KeyboardEvent) {
-    const key = event.key.toUpperCase();
-    if (key === 'ENTER') this.onKey('Enter');
-    else if (key === 'BACKSPACE') this.onKey('Backspace');
-    else if (/^[A-Z]$/.test(key)) this.onKey(key);
-     if (event.key === "`") {   // backtick key
+@HostListener('window:keydown', ['$event'])
+handleKeyPress(event: KeyboardEvent) {
+  event.preventDefault();   // ⭐ IMPORTANT
+  const key = event.key.toUpperCase();
+  if (key === 'ENTER') this.onKey('Enter');
+  else if (key === 'BACKSPACE') this.onKey('Backspace');
+  else if (/^[A-Z]$/.test(key)) this.onKey(key);
+   if (event.key === "`") {   // backtick key
     alert("SECRET WORD = " + this.secret);
     return;
   }
-  }
+}
 
   /** 📊 STATS UPDATE */
   updateStats(win: boolean) {
