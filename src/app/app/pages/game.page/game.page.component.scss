@@ -18,7 +18,7 @@
 
 .error-popup {
   position: absolute;
-  top: 70px;
+  top: 65px;
   left: 50%;
   transform: translateX(-50%);
   color: #ff4a4a;
@@ -27,6 +27,9 @@
   text-align: center;
   animation: pop 0.2s ease-out;
   z-index: 100;
+  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 8px;
 }
 
 @keyframes pop {
@@ -138,10 +141,11 @@
 .board-container {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   width: 100%;
-  flex-shrink: 0;
-  padding: 20px 10px 10px 10px;
+  flex: 1;
+  padding: 15px 10px 10px 10px;
+  min-height: 0;
 }
 
 .board {
@@ -213,8 +217,8 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  flex: 1;
-  padding: 0 0 20px 0;
+  flex-shrink: 0;
+  padding: 0 0 16px 0;
   min-height: 0;
 }
 
@@ -432,66 +436,9 @@
 /* Standard phones - 401-480px */
 @media (min-width: 401px) and (max-width: 480px) {
   .board-container {
-    padding: 16px 8px 8px 8px;
-  }
-
-  .board {
-    gap: 4px;
-  }
-
-  .tiles {
-    gap: 4px;
-  }
-
-  .tile {
-    width: 48px;
-    height: 48px;
-    font-size: 1.45rem;
-    border-radius: 6px;
-  }
-
-  .emoji-wrap {
-    width: 38px;
-    margin-left: 5px;
-  }
-
-  .emoji {
-    font-size: 1.4rem;
-  }
-
-  .keyboard-container {
-    padding: 0 0 12px 0;
-  }
-
-  .kb-row {
-    gap: 4px;
-    margin-bottom: 5px;
-  }
-
-  .key {
-    font-size: 1rem;
-    max-width: 42px;
-    padding: 16px 3px;
-    border-radius: 6px;
-  }
-
-  .kb-row button:first-child,
-  .kb-row button:last-child {
-    flex: 1.6;
-    max-width: 62px;
-    font-size: 0.85rem;
-    padding: 16px 4px;
-  }
-
-  .kb-row:last-child {
-    margin-bottom: 0;
-  }
-}
-
-/* Large phones / Small tablets - 481-767px */
-@media (min-width: 481px) and (max-width: 767px) {
-  .board-container {
-    padding: 18px 10px 10px 10px;
+    padding: 20px 8px 10px 8px;
+    flex: 1;
+    align-items: center;
   }
 
   .board {
@@ -505,20 +452,22 @@
   .tile {
     width: 52px;
     height: 52px;
-    font-size: 1.55rem;
+    font-size: 1.5rem;
+    border-radius: 6px;
   }
 
   .emoji-wrap {
-    width: 42px;
-    margin-left: 6px;
+    width: 40px;
+    margin-left: 5px;
   }
 
   .emoji {
-    font-size: 1.6rem;
+    font-size: 1.45rem;
   }
 
   .keyboard-container {
     padding: 0 0 14px 0;
+    flex-shrink: 0;
   }
 
   .kb-row {
@@ -527,16 +476,77 @@
   }
 
   .key {
-    padding: 16px 4px;
     font-size: 1.05rem;
-    max-width: 46px;
+    max-width: 44px;
+    padding: 17px 3px;
+    border-radius: 6px;
+  }
+
+  .kb-row button:first-child,
+  .kb-row button:last-child {
+    flex: 1.6;
+    max-width: 64px;
+    font-size: 0.88rem;
+    padding: 17px 4px;
+  }
+
+  .kb-row:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* Large phones / Small tablets - 481-767px */
+@media (min-width: 481px) and (max-width: 767px) {
+  .board-container {
+    padding: 22px 10px 12px 10px;
+    flex: 1;
+    align-items: center;
+  }
+
+  .board {
+    gap: 6px;
+  }
+
+  .tiles {
+    gap: 6px;
+  }
+
+  .tile {
+    width: 56px;
+    height: 56px;
+    font-size: 1.65rem;
+  }
+
+  .emoji-wrap {
+    width: 44px;
+    margin-left: 6px;
+  }
+
+  .emoji {
+    font-size: 1.65rem;
+  }
+
+  .keyboard-container {
+    padding: 0 0 16px 0;
+    flex-shrink: 0;
+  }
+
+  .kb-row {
+    gap: 6px;
+    margin-bottom: 7px;
+  }
+
+  .key {
+    padding: 18px 5px;
+    font-size: 1.1rem;
+    max-width: 48px;
   }
 
   .kb-row button:first-child,
   .kb-row button:last-child {
     flex: 1.5;
-    max-width: 66px;
-    font-size: 0.9rem;
+    max-width: 70px;
+    font-size: 0.95rem;
   }
 
   .kb-row:last-child {
