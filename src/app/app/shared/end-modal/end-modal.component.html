@@ -4,7 +4,22 @@
 
   <button class="close-btn" (click)="closeModal()">✖</button>
 
-  <h2>Statistics</h2>
+  <!-- 🆕 ONLY SHOW WIN/LOSS MESSAGE IF GAME WAS COMPLETED -->
+  <h2 *ngIf="gameCompleted && didWin">🎉 You Won!</h2>
+  <h2 *ngIf="gameCompleted && !didWin">😢 Game Over</h2>
+  
+  <!-- 🆕 SHOW DEFAULT TITLE IF GAME NOT COMPLETED -->
+  <h2 *ngIf="!gameCompleted">Statistics</h2>
+
+  <!-- 🆕 SHOW SECRET WORD ONLY IF LOST AND GAME COMPLETED -->
+  <div *ngIf="gameCompleted && !didWin" class="secret-word-reveal">
+    <p class="reveal-text">The word was:</p>
+    <div class="secret-word">{{ secretWord }}</div>
+    <p class="encourage-text">Better luck tomorrow! 💪</p>
+  </div>
+
+  <!-- 🆕 ONLY SHOW "Statistics" HEADER IF GAME WAS COMPLETED -->
+  <h3 *ngIf="gameCompleted">Statistics</h3>
 
   <div class="stats-box">
     <div><b>{{ stats.played }}</b><br>Played</div>
@@ -17,6 +32,7 @@
 
   <h1>{{ countdownText }}</h1>
 
-  <button class="share-btn">🔗 SHARE</button>
+  <button class="share-btn" (click)="shareResult()">🔗 SHARE</button>
+
 
 </div>

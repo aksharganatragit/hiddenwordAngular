@@ -42,53 +42,101 @@ export class GamePageComponent implements OnInit {
   showHelp = false;
   showEndModal = false;
   errorMessage = "";
+  gameOver = false;
+  didWin = false; // 🆕 ADD THISs
+  gameCompleted = false; // 🆕 ADD THIS - Track if game was actually finished
 
   constructor(private router: Router) {
     this.initGrid();
   }
 
   /** 🟦 ON INIT - RESTORE BOARD & CHECK MODAL */
-  ngOnInit() {
-    this.restoreBoard();
-
-    const lastPlayed = localStorage.getItem('last_played');
-    if (lastPlayed === new Date().toDateString()) {
-      this.showEndModal = true;
-    }
-
-    /** ⏳ AUTO RESET IF MIDNIGHT PASSED WHILE TAB IS OPEN */
-    const storedDailyWord = localStorage.getItem("daily_word");
-    if (storedDailyWord) {
-      const dailyWordData = JSON.parse(storedDailyWord);
-      const currentDate = new Date().toDateString();
-      
-      setInterval(() => {
-        if (dailyWordData.date !== new Date().toDateString()) {
-          localStorage.removeItem("board_state");
-          localStorage.removeItem("daily_word");
-          location.reload();
-        }
-      }, 60000); // check every 1 minute
+ngOnInit() {
+  // ✅ CHECK IF NEW DAY - Clear old data if word changed
+  const storedDailyWord = localStorage.getItem("daily_word");
+  const currentDate = new Date().toDateString();
+  
+  if (storedDailyWord) {
+    const dailyWordData = JSON.parse(storedDailyWord);
+    
+    // 🔄 If it's a new day, clear everything
+    if (dailyWordData.date !== currentDate) {
+      localStorage.removeItem("board_state");
+      localStorage.removeItem("last_played");
+      localStorage.removeItem("daily_word");
+      this.secret = this.getDailyWord(); // Generate new word
+      this.initGrid(); // Reset grid
+      this.gameOver = false; // 🆕 Reset game over state
+        this.didWin = false; // 🆕 Reset win state
+           this.gameCompleted = false; // 🆕 Reset completed state
     }
   }
 
+  // Restore board only if it's the same day
+  this.restoreBoard();
+  // 🆕 Load win state from stats
+  const stats = JSON.parse(localStorage.getItem('game_stats') || '{}');
+  if (stats.didWin !== undefined) {
+    this.didWin = stats.didWin;
+  }
+   if (stats.gameCompleted !== undefined) {
+    this.gameCompleted = stats.gameCompleted; // 🆕 Restore completion status
+  }
+  
+  // Check if already played today
+  const lastPlayed = localStorage.getItem('last_played');
+  if (lastPlayed === currentDate) {
+    this.showEndModal = true;
+    this.gameOver = true; // 🆕 Game is over if already played today
+  }
+   const hasSeenHelp = localStorage.getItem('has_seen_help');
+  if (!hasSeenHelp) {
+    this.showHelp = true;
+  }
+
+  /** ⏳ AUTO RESET IF MIDNIGHT PASSED WHILE TAB IS OPEN */
+  setInterval(() => {
+    const now = new Date().toDateString();
+    const stored = localStorage.getItem("daily_word");
+    
+    if (stored) {
+      const data = JSON.parse(stored);
+      if (data.date !== now) {
+        localStorage.removeItem("board_state");
+        localStorage.removeItem("daily_word");
+        localStorage.removeItem("last_played");
+        location.reload();
+      }
+    }
+  }, 60000); // check every 1 minute
+}
   /** 🎯 RESTORE PREVIOUS BOARD */
-  restoreBoard() {
-    const storedBoard = localStorage.getItem("board_state");
-    if (!storedBoard) return;
+ restoreBoard() {
+  const storedBoard = localStorage.getItem("board_state");
+  if (!storedBoard) return;
 
-    const grid = JSON.parse(storedBoard);
-
-    grid.forEach((row: any, ri: number) =>
-      row.forEach((cell: any, ci: number) => {
-        this.rows[ri].cells[ci].letter = cell.letter;
-        this.rows[ri].cells[ci].state = cell.state;
-      })
-    );
-
-    this.currentRow = grid.findIndex((r: any) => r.some((c: any) => c.letter === ""));
-    if (this.currentRow === -1) this.currentRow = this.rowsCount - 1;
+  // Double-check we're on the same day
+  const storedWord = localStorage.getItem("daily_word");
+  if (storedWord) {
+    const wordData = JSON.parse(storedWord);
+    if (wordData.date !== new Date().toDateString()) {
+      // Different day - don't restore
+      return;
+    }
   }
+
+  const grid = JSON.parse(storedBoard);
+
+  grid.forEach((row: any, ri: number) =>
+    row.forEach((cell: any, ci: number) => {
+      this.rows[ri].cells[ci].letter = cell.letter;
+      this.rows[ri].cells[ci].state = cell.state;
+    })
+  );
+
+  this.currentRow = grid.findIndex((r: any) => r.some((c: any) => c.letter === ""));
+  if (this.currentRow === -1) this.currentRow = this.rowsCount - 1;
+}
 
   /** ⏰ MIDNIGHT COUNTDOWN */
   getCountdown() {
@@ -152,10 +200,22 @@ getDailyWord(): string {
 
   /** HELP MODAL **/
   openHelp() { this.showHelp = true; }
-  closeHelp() { this.showHelp = false; }
+  closeHelp() { this.showHelp = false;
+    localStorage.setItem('has_seen_help', 'true');
+   }
 
   /** 🏆 LEADERBOARD BUTTON TRIGGERS END MODAL */
-  openEndModal() { this.showEndModal = true; }
+openEndModal() { 
+  // 🆕 Load current win state and completion status from stats
+  const stats = JSON.parse(localStorage.getItem('game_stats') || '{}');
+  if (stats.didWin !== undefined) {
+    this.didWin = stats.didWin;
+  }
+  if (stats.gameCompleted !== undefined) {
+    this.gameCompleted = stats.gameCompleted;
+  }
+  this.showEndModal = true; 
+}
 
   /** VIRTUAL KEYBOARD */
   keyboardRows = [
@@ -176,6 +236,7 @@ getDailyWord(): string {
 
   /** KEY ENTRY */
   onKey(key: string) {
+     if (this.gameOver) return;
     if (key === 'Enter') return this.submitGuess();
     if (key === 'Backspace') return this.deleteLetter();
 
@@ -209,6 +270,7 @@ getDailyWord(): string {
 
   /** 🟩 VALID WORD → Evaluate */
   this.evaluateGuess(guess);
+  
   this.saveBoardState();
 
   /** Move to next row ONLY if valid */
@@ -250,6 +312,10 @@ getDailyWord(): string {
       this.updateStats(true);
       this.lockDay();
       this.showEndModal = true;
+       this.gameOver = true; // 🆕 Lock the game
+        this.didWin = true; // 🆕 ADD THIS
+         this.gameCompleted = true; // 🆕 Mark game as completed
+           this.showEndModal = true;
       return;
     }
 
@@ -257,6 +323,10 @@ getDailyWord(): string {
       this.updateStats(false);
       this.lockDay();
       this.showEndModal = true;
+        this.gameOver = true;
+          this.didWin = false; // 🆕 ADD THIS
+           this.gameCompleted = true; // 🆕 Mark game as completed
+             this.showEndModal = true;
     }
   }
 
@@ -296,10 +366,13 @@ handleKeyPress(event: KeyboardEvent) {
       stats.wins = (stats.wins || 0) + 1;
       stats.streak = (stats.streak || 0) + 1;
       stats.maxStreak = Math.max(stats.streak, stats.maxStreak || 0);
+       stats.didWin = true; // 🆕 ADD THIS - Save win status
+       stats.didWin = true; // 🆕 Save win status
     } else {
       stats.streak = 0;
+       stats.didWin = false; // 🆕 ADD THIS - Save loss status
     }
-
+stats.gameCompleted = true; // 🆕 Save completion status
     stats.winPercent = Math.round((stats.wins || 0) / stats.played * 100);
     stats.countdown = this.getCountdown();
 
@@ -310,4 +383,45 @@ handleKeyPress(event: KeyboardEvent) {
   lockDay() {
     localStorage.setItem('last_played', new Date().toDateString());
   }
+
+testMidnightReset() {
+  console.log('🧪 Testing midnight reset...');
+  
+  localStorage.removeItem("board_state");
+  localStorage.removeItem("last_played");
+  localStorage.removeItem("daily_word");
+  
+  // 🆕 Also reset win state and completion status in stats
+  const stats = JSON.parse(localStorage.getItem('game_stats') || '{}');
+  delete stats.didWin;
+  delete stats.gameCompleted; // 🆕 Clear completion status
+  localStorage.setItem('game_stats', JSON.stringify(stats));
+  
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowKey = tomorrow.toDateString();
+  
+  const epoch = new Date('2024-01-01');
+  tomorrow.setHours(0, 0, 0, 0);
+  const daysSinceEpoch = Math.floor((tomorrow.getTime() - epoch.getTime()) / (1000 * 60 * 60 * 24));
+  const wordIndex = daysSinceEpoch % WORD_LIST.length;
+  const tomorrowWord = WORD_LIST[wordIndex];
+  
+  localStorage.setItem("daily_word", JSON.stringify({
+    date: tomorrowKey,
+    word: tomorrowWord
+  }));
+  
+  this.secret = tomorrowWord;
+  this.initGrid();
+  this.currentRow = 0;
+  this.currentCol = 0;
+  this.showEndModal = false;
+  this.gameOver = false;
+  this.didWin = false;
+  this.gameCompleted = false; // 🆕 Reset completion status
+  
+  console.log('✅ Reset complete! Tomorrow\'s word:', this.secret);
+  alert('✅ Game reset with TOMORROW\'S word!\n\nNew word: ' + this.secret);
+}
 }

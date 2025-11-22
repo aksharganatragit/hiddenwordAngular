@@ -6,21 +6,58 @@
   <h2>How to Play</h2>
 
   <p>
-    Guess the secret 5-letter word in <strong>7 attempts</strong>. 
+    Guess the hidden <strong>5-letter word</strong> in <strong>7 tries</strong>.
     Each guess must be a valid English word.
   </p>
 
-  <h3>Color Guide</h3>
-  <div class="color-guide">
-    <p>🟩 <strong>Green</strong> – Right letter, right position</p>
-    <p>🟨 <strong>Yellow</strong> – Right letter, wrong position</p>
-    <p>⬛ <strong>Gray</strong> – Letter not in word</p>
+  <!-- =====================
+       EXAMPLES 
+  ====================== -->
+  <h3>Examples</h3>
+
+  <!-- Example 1 -->
+  <div class="example-row">
+    <div class="tile correct">H</div>
+    <div class="tile">O</div>
+    <div class="tile">U</div>
+    <div class="tile">S</div>
+    <div class="tile">E</div>
   </div>
+  <p>
+    <strong>H</strong> is in the word and in the <strong>correct position</strong>.
+  </p>
+
+  <!-- Example 2 -->
+  <div class="example-row">
+    <div class="tile">C</div>
+    <div class="tile present">R</div>
+    <div class="tile">A</div>
+    <div class="tile">N</div>
+    <div class="tile">E</div>
+  </div>
+  <p>
+    <strong>R</strong> is in the word but in the <strong>wrong position</strong>.
+  </p>
+
+  <!-- Example 3 -->
+  <div class="example-row">
+    <div class="tile">P</div>
+    <div class="tile">L</div>
+    <div class="tile absent">A</div>
+    <div class="tile">N</div>
+    <div class="tile">E</div>
+  </div>
+  <p>
+    <strong>A</strong> is <strong>not in the word</strong> at all.
+  </p>
+
 
   <h3>Controls</h3>
   <ul>
-    <li><strong>Type</strong> to enter letters</li>
-    <li><strong>Enter</strong> to submit guess</li>
+    <li><strong>Type letters</strong> to enter a guess</li>
+    <li><strong>Enter</strong> to submit</li>
     <li><strong>Backspace</strong> to delete</li>
   </ul>
+
+  <p class="good-luck">Good luck! 🧠</p>
 </div>

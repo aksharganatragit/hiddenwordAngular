@@ -1,11 +1,24 @@
 /* ROOT LAYOUT */
 
 * {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+
+/* ROOT LAYOUT */
+
+* {
   font-family: "Luckiest Guy", "Bangers", "Fredoka", sans-serif !important;
   font-weight: 900 !important;
   letter-spacing: 0.5px;
 }
-
 .game-root {
   display: flex;
   flex-direction: column;
@@ -159,8 +172,15 @@
   flex-direction: column;
   overflow: hidden;
   min-height: 0;
+   justify-content: space-between; /* 🆕 ADD THIS - Better distribution */
 }
-
+.tile.active {
+  border: 2px solid #ffffff !important; /* bright white border */
+  background-color: rgba(255, 255, 255, 0.08); /* soft white wash */
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.6); /* subtle white glow */
+  transform: scale(1.10);
+  transition: 0.15s ease;
+}
 /* =========================
    GAME BOARD
    ========================= */
@@ -252,6 +272,28 @@
 @keyframes popIn {
   0%   { transform: scale(0.8); }
   100% { transform: scale(1); }
+}
+
+.spacer {
+  flex: 0 0 auto;
+  min-height: 10px;
+  max-height: 30px;
+}
+
+/* For very small screens, reduce spacer */
+@media (max-width: 400px) {
+  .spacer {
+    min-height: 5px;
+    max-height: 15px;
+  }
+}
+
+/* For tablets and larger, increase spacer */
+@media (min-width: 768px) {
+  .spacer {
+    min-height: 15px;
+    max-height: 40px;
+  }
 }
 /* =========================
    KEYBOARD

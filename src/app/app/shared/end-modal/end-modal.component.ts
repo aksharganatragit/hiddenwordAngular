@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { NgIf, CommonModule } from '@angular/common';
 
 @Component({
@@ -8,13 +8,18 @@ import { NgIf, CommonModule } from '@angular/common';
   templateUrl: './end-modal.component.html',
   styleUrls: ['./end-modal.component.scss'],
 })
-export class EndModalComponent {
+export class EndModalComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
+
+  @Input() didWin: boolean = true;
+  @Input() secretWord: string = '';
+  @Input() gameCompleted: boolean = false;
+  @Input() rows: any[] = []; // ✅ REQUIRED for sharing!
 
   stats: any = {};
   countdownText: string = '';
 
-  constructor() {
+  ngOnInit() {
     this.loadStats();
     this.startCountdown();
   }
@@ -23,15 +28,14 @@ export class EndModalComponent {
   loadStats() {
     this.stats = JSON.parse(localStorage.getItem('game_stats') || '{}');
 
-    // Ensure defaults exist
-    this.stats.played = this.stats.played ?? 0;
-    this.stats.wins = this.stats.wins ?? 0;
-    this.stats.winPercent = this.stats.winPercent ?? 0;
-    this.stats.streak = this.stats.streak ?? 0;
-    this.stats.maxStreak = this.stats.maxStreak ?? 0;
+    this.stats.played ??= 0;
+    this.stats.wins ??= 0;
+    this.stats.winPercent ??= 0;
+    this.stats.streak ??= 0;
+    this.stats.maxStreak ??= 0;
   }
 
-  /** 🕛 LIVE COUNTDOWN (updates every second) **/
+  /** 🕛 COUNTDOWN **/
   startCountdown() {
     this.updateCountdown();
     setInterval(() => this.updateCountdown(), 1000);
@@ -53,8 +57,95 @@ export class EndModalComponent {
       `${s.toString().padStart(2, '0')}`;
   }
 
-  /** ❌ CLOSE MODAL **/
+  /** ❌ CLOSE **/
   closeModal() {
     this.close.emit();
+  }
+
+  /** 🔗 SHARE RESULT (Fixed to work with your row structure) **/
+  shareResult() {
+    const domain = 'https://hiddenword.co/';
+
+    // Check if game was completed
+    if (!this.gameCompleted) {
+      alert('Complete the game first to share your result!');
+      return;
+    }
+
+    // Filter rows that have at least one filled cell
+    const filledRows = this.rows.filter(r => 
+      r.cells.some((c: any) => c.letter !== '')
+    );
+
+    if (filledRows.length === 0) {
+      alert('Nothing to share yet!');
+      return;
+    }
+
+    // Generate emoji grid based on cell states
+    const emojiGrid = filledRows.map(r => {
+      return r.cells.map((c: any) => {
+        if (c.state === 'correct') return '🟩';
+        if (c.state === 'present') return '🟨';
+        if (c.state === 'absent') return '⬛';
+        return '⬜'; // Empty cell
+      }).join('');
+    }).join('\n');
+
+    const resultTitle = this.didWin ? '✅ WIN' : '❌ LOSS';
+    const attempts = filledRows.length;
+
+    const shareText =
+      `Hidden Word ${resultTitle}\n` +
+      `Attempts: ${attempts}/7\n\n` +
+      `${emojiGrid}\n\n` +
+      `Play at: ${domain}`;
+
+    // Try to use the modern share API first, fallback to clipboard
+    if (navigator.share) {
+      navigator.share({
+        title: 'Hidden Word',
+        text: shareText
+      }).catch(() => {
+        // If share fails, copy to clipboard
+        this.copyToClipboard(shareText);
+      });
+    } else {
+      // Fallback to clipboard
+      this.copyToClipboard(shareText);
+    }
+  }
+
+  /** 📋 Copy to clipboard helper **/
+  copyToClipboard(text: string) {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert('✅ Result copied to clipboard!\n\nPaste it anywhere to share your score!');
+      }).catch(() => {
+        // Fallback for older browsers
+        this.fallbackCopy(text);
+      });
+    } else {
+      this.fallbackCopy(text);
+    }
+  }
+
+  /** 📋 Fallback copy method for older browsers **/
+  fallbackCopy(text: string) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.select();
+    
+    try {
+      document.execCommand('copy');
+      alert('✅ Result copied to clipboard!');
+    } catch (err) {
+      alert('❌ Could not copy. Please try again.');
+    }
+    
+    document.body.removeChild(textArea);
   }
 }
