@@ -64,7 +64,7 @@ export class EndModalComponent implements OnInit {
 
   /** 🔗 SHARE RESULT (Fixed to work with your row structure) **/
   shareResult() {
-    const domain = 'https://hiddenword.co/';
+    const domain = 'https://hiddenword.co';
 
     // Check if game was completed
     if (!this.gameCompleted) {
