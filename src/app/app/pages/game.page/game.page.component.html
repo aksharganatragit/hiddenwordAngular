@@ -1,7 +1,9 @@
 <div class="game-root">
   <header class="game-header">
     <!-- Help icon on the left -->
-    <button class="help-icon" (click)="openHelp()">❓</button>
+<button class="help-icon" (click)="openHelp()" aria-label="Help">
+    <span class="icon-content">?</span>
+  </button>
     
     <!-- Centered title -->
     <h1 class="game-logo">

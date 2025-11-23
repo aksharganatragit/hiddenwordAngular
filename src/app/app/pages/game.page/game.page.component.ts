@@ -8,6 +8,8 @@ import { EndModalComponent } from '../../shared/end-modal/end-modal.component';
 
 import { WORD_LIST, VALID_WORDS } from '../game.page/words';
 
+import { MatIconModule } from '@angular/material/icon';
+
 type CellState = 'correct' | 'present' | 'absent' | '';
 
 interface Cell {
@@ -23,17 +25,17 @@ interface Row {
 @Component({
   selector: 'app-game-page',
   standalone: true,
-  imports: [NgIf, NgFor, CommonModule, HelpModalComponent, EndModalComponent],
+  imports: [NgIf, NgFor, CommonModule, HelpModalComponent, EndModalComponent, MatIconModule],
   templateUrl: './game.page.component.html',
   styleUrls: ['./game.page.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class GamePageComponent implements OnInit {
   cols = 5;
-  rowsCount = 7;
+  rowsCount = 6;
 
   /** 🟩 DYNAMIC SECRET WORD */
-  secret = this.getDailyWord();
+  secret = '';
 
   rows: Row[] = [];
   currentRow = 0;
@@ -47,72 +49,52 @@ export class GamePageComponent implements OnInit {
   gameCompleted = false;
 
   // 🆕 Version tracking for cache busting
-  private readonly GAME_VERSION = '1.0.1'; // Increment this when you need to force reset
+  private readonly GAME_VERSION = '1.0.2'; // Incremented to force reset
 
   constructor(private router: Router) {
-    this.initGrid();
+    // Don't initialize here - do it in ngOnInit after all checks
   }
 
   /** 🟦 ON INIT - RESTORE BOARD & CHECK MODAL */
   ngOnInit() {
     const currentDate = new Date().toDateString();
     
-    // 🆕 CHECK VERSION - Force clear if version changed (for existing users)
+    console.log('🚀 App initialized at:', currentDate);
+    
+    // 🆕 STEP 1: Check version FIRST (for existing users with stale cache)
     this.checkVersionAndReset();
     
-    // ✅ CHECK IF NEW DAY - Clear old data if word changed
-    const storedDailyWord = localStorage.getItem("daily_word");
+    // 🆕 STEP 2: Check if new day and clear if needed
+    const needsReset = this.checkAndClearIfNewDay(currentDate);
     
-    if (storedDailyWord) {
-      const dailyWordData = JSON.parse(storedDailyWord);
-      
-      // 🔄 If it's a new day, clear everything
-      if (dailyWordData.date !== currentDate) {
-        this.clearGameForNewDay();
-      }
-    } else {
-      // No stored word - new player or cleared storage
-      this.secret = this.getDailyWord();
-    }
-
-    // Restore board only if it's the same day
-    this.restoreBoard();
+    // 🆕 STEP 3: Initialize word and grid (either fresh or restored)
+    this.secret = this.getDailyWord();
+    this.initGrid();
     
-    // 🆕 Load win state and completion status from stats
-    const stats = JSON.parse(localStorage.getItem('game_stats') || '{}');
-    if (stats.didWin !== undefined) {
-      this.didWin = stats.didWin;
-    }
-    if (stats.gameCompleted !== undefined) {
-      this.gameCompleted = stats.gameCompleted;
+    // 🆕 STEP 4: Restore board if same day and not reset
+    if (!needsReset) {
+      this.restoreBoard();
     }
     
-    // Check if already played today
+    // 🆕 STEP 5: Load completion status from stats
+    this.loadGameState();
+    
+    // 🆕 STEP 6: Check if already played today
     const lastPlayed = localStorage.getItem('last_played');
     if (lastPlayed === currentDate && this.gameCompleted) {
+      console.log('✅ Game already completed today');
       this.showEndModal = true;
       this.gameOver = true;
     }
     
+    // 🆕 STEP 7: Show help for first-time users
     const hasSeenHelp = localStorage.getItem('has_seen_help');
     if (!hasSeenHelp) {
       this.showHelp = true;
     }
 
-    /** ⏳ AUTO RESET IF MIDNIGHT PASSED WHILE TAB IS OPEN */
-    setInterval(() => {
-      const now = new Date().toDateString();
-      const stored = localStorage.getItem("daily_word");
-      
-      if (stored) {
-        const data = JSON.parse(stored);
-        if (data.date !== now) {
-          // 🔄 New day detected - clear everything and reload
-          this.clearGameForNewDay();
-          location.reload();
-        }
-      }
-    }, 60000); // check every 1 minute
+    // 🆕 STEP 8: Setup midnight auto-reset
+    this.setupMidnightWatcher();
   }
 
   /** 🆕 CHECK VERSION AND FORCE RESET IF NEEDED */
@@ -120,24 +102,21 @@ export class GamePageComponent implements OnInit {
     const storedVersion = localStorage.getItem('game_version');
     
     if (storedVersion !== this.GAME_VERSION) {
-      console.log('🔄 Version mismatch - clearing stale data');
+      console.log('🔄 Version mismatch detected:', storedVersion, '->', this.GAME_VERSION);
+      console.log('🧹 Clearing stale daily data...');
       
-      // Only clear daily game state, preserve long-term stats
+      // Clear daily-specific flags from stats
       const stats = JSON.parse(localStorage.getItem('game_stats') || '{}');
-      
-      // Clear daily-specific flags
       delete stats.didWin;
       delete stats.gameCompleted;
       delete stats.countdown;
-      
-      // Save updated stats
       localStorage.setItem('game_stats', JSON.stringify(stats));
       
       // Clear daily data
       localStorage.removeItem("board_state");
       localStorage.removeItem("last_played");
       
-      // Don't clear daily_word if it's still today's word
+      // Only clear daily_word if it's NOT today's word
       const storedWord = localStorage.getItem("daily_word");
       if (storedWord) {
         const wordData = JSON.parse(storedWord);
@@ -149,62 +128,127 @@ export class GamePageComponent implements OnInit {
       // Save new version
       localStorage.setItem('game_version', this.GAME_VERSION);
       
-      // Reset game state
-      this.gameOver = false;
-      this.didWin = false;
-      this.gameCompleted = false;
-      this.showEndModal = false;
+      console.log('✅ Version updated and stale data cleared');
     }
+  }
+
+  /** 🆕 CHECK IF NEW DAY AND CLEAR IF NEEDED */
+  private checkAndClearIfNewDay(currentDate: string): boolean {
+    const storedDailyWord = localStorage.getItem("daily_word");
+    
+    if (storedDailyWord) {
+      const dailyWordData = JSON.parse(storedDailyWord);
+      
+      if (dailyWordData.date !== currentDate) {
+        console.log('🌅 NEW DAY DETECTED!');
+        console.log('   Old date:', dailyWordData.date);
+        console.log('   New date:', currentDate);
+        this.clearGameForNewDay();
+        return true;
+      }
+    }
+    
+    return false;
+  }
+
+  /** 🆕 LOAD GAME STATE FROM STATS */
+  private loadGameState() {
+    const stats = JSON.parse(localStorage.getItem('game_stats') || '{}');
+    
+    if (stats.didWin !== undefined) {
+      this.didWin = stats.didWin;
+    }
+    if (stats.gameCompleted !== undefined) {
+      this.gameCompleted = stats.gameCompleted;
+    }
+    
+    console.log('📊 Game state loaded:', {
+      didWin: this.didWin,
+      gameCompleted: this.gameCompleted
+    });
+  }
+
+  /** 🆕 SETUP MIDNIGHT WATCHER */
+  private setupMidnightWatcher() {
+    setInterval(() => {
+      const now = new Date().toDateString();
+      const stored = localStorage.getItem("daily_word");
+      
+      if (stored) {
+        const data = JSON.parse(stored);
+        if (data.date !== now) {
+          console.log('⏰ MIDNIGHT DETECTED - Resetting game...');
+          console.log('   Old date:', data.date);
+          console.log('   New date:', now);
+          
+          // Clear everything synchronously
+          this.clearGameForNewDay();
+          
+          // Small delay to ensure localStorage is fully written
+          setTimeout(() => {
+            location.reload();
+          }, 100);
+        }
+      }
+    }, 30000); // Check every 30 seconds for faster detection
   }
 
   /** 🧹 CLEAR GAME DATA FOR NEW DAY */
   private clearGameForNewDay() {
-    console.log('🌅 New day detected - resetting game');
+    console.log('🧹 Clearing all game data for new day...');
     
     // Clear board and daily tracking
     localStorage.removeItem("board_state");
     localStorage.removeItem("last_played");
     localStorage.removeItem("daily_word");
     
-    // 🆕 Clear daily game completion status from stats
+    // Clear daily game completion status from stats
     const stats = JSON.parse(localStorage.getItem('game_stats') || '{}');
     delete stats.didWin;
     delete stats.gameCompleted;
     delete stats.countdown;
     localStorage.setItem('game_stats', JSON.stringify(stats));
     
-    // Reset game state
-    this.secret = this.getDailyWord();
-    this.initGrid();
-    this.currentRow = 0;
-    this.currentCol = 0;
+    // Reset all game state variables
     this.gameOver = false;
     this.didWin = false;
     this.gameCompleted = false;
     this.showEndModal = false;
+    this.currentRow = 0;
+    this.currentCol = 0;
+    this.errorMessage = '';
+    
+    console.log('✅ Game data cleared successfully');
   }
 
   /** 🎯 RESTORE PREVIOUS BOARD */
   restoreBoard() {
     const storedBoard = localStorage.getItem("board_state");
-    if (!storedBoard) return;
+    if (!storedBoard) {
+      console.log('📋 No stored board found - starting fresh');
+      return;
+    }
 
     // Double-check we're on the same day
     const storedWord = localStorage.getItem("daily_word");
     if (storedWord) {
       const wordData = JSON.parse(storedWord);
       if (wordData.date !== new Date().toDateString()) {
-        // Different day - don't restore
+        console.log('⚠️ Stored board is from different day - ignoring');
         return;
       }
     }
 
+    console.log('📋 Restoring board from storage...');
+    
     const grid = JSON.parse(storedBoard);
 
     grid.forEach((row: any, ri: number) =>
       row.forEach((cell: any, ci: number) => {
-        this.rows[ri].cells[ci].letter = cell.letter;
-        this.rows[ri].cells[ci].state = cell.state;
+        if (this.rows[ri] && this.rows[ri].cells[ci]) {
+          this.rows[ri].cells[ci].letter = cell.letter;
+          this.rows[ri].cells[ci].state = cell.state;
+        }
       })
     );
 
@@ -222,6 +266,8 @@ export class GamePageComponent implements OnInit {
       this.currentCol = currentRowData.findIndex((c: any) => c.letter === "");
       if (this.currentCol === -1) this.currentCol = this.cols;
     }
+    
+    console.log('✅ Board restored - currentRow:', this.currentRow, 'currentCol:', this.currentCol);
   }
 
   /** ⏰ MIDNIGHT COUNTDOWN */
@@ -243,11 +289,16 @@ export class GamePageComponent implements OnInit {
 
     if (stored) {
       const data = JSON.parse(stored);
-      if (data.date === todayKey) return data.word;
+      if (data.date === todayKey) {
+        console.log('📖 Using stored word for today');
+        return data.word;
+      }
     }
 
+    console.log('🎲 Generating new word for:', todayKey);
+
     // 🎯 DATE-BASED INDEX - Same word for everyone on same day!
-    const epoch = new Date('2024-01-01'); // Your game start date
+    const epoch = new Date('2024-01-01');
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
@@ -261,6 +312,7 @@ export class GamePageComponent implements OnInit {
       word
     }));
 
+    console.log('✅ New word generated and stored');
     return word;
   }
 
@@ -277,13 +329,7 @@ export class GamePageComponent implements OnInit {
   /** 🏆 LEADERBOARD BUTTON TRIGGERS END MODAL */
   openEndModal() { 
     // 🆕 Load current win state and completion status from stats
-    const stats = JSON.parse(localStorage.getItem('game_stats') || '{}');
-    if (stats.didWin !== undefined) {
-      this.didWin = stats.didWin;
-    }
-    if (stats.gameCompleted !== undefined) {
-      this.gameCompleted = stats.gameCompleted;
-    }
+    this.loadGameState();
     this.showEndModal = true; 
   }
 
@@ -335,7 +381,7 @@ export class GamePageComponent implements OnInit {
     if (!VALID_WORDS.includes(guess)) {
       this.errorMessage = "⛔ Not a valid English word";
       setTimeout(() => (this.errorMessage = ""), 2000);
-      return;  // ⛔ STOP HERE → DO NOT ADVANCE ROW
+      return;
     }
 
     /** 🟩 VALID WORD → Evaluate */
@@ -383,6 +429,7 @@ export class GamePageComponent implements OnInit {
 
     // Check win condition
     if (matchCount === 5) {
+      console.log('🎉 PLAYER WON!');
       this.updateStats(true);
       this.lockDay();
       this.gameOver = true;
@@ -394,6 +441,7 @@ export class GamePageComponent implements OnInit {
 
     // Check loss condition
     if (this.currentRow === this.rowsCount - 1) {
+      console.log('😢 Player lost - word was:', this.secret);
       this.updateStats(false);
       this.lockDay();
       this.gameOver = true;
@@ -426,7 +474,15 @@ export class GamePageComponent implements OnInit {
 
     // Debug shortcut
     if (event.key === "`") {
-      alert("SECRET WORD = " + this.secret);
+      console.log('🔍 DEBUG INFO:');
+      console.log('Secret word:', this.secret);
+      console.log('Current date:', new Date().toDateString());
+      console.log('Stored word:', localStorage.getItem('daily_word'));
+      console.log('Game state:', {
+        gameOver: this.gameOver,
+        didWin: this.didWin,
+        gameCompleted: this.gameCompleted
+      });
     }
   }
 
@@ -451,11 +507,15 @@ export class GamePageComponent implements OnInit {
     stats.countdown = this.getCountdown();
 
     localStorage.setItem('game_stats', JSON.stringify(stats));
+    
+    console.log('📊 Stats updated:', stats);
   }
 
   /** 🗓️ LOCK GAME FOR TODAY */
   lockDay() {
-    localStorage.setItem('last_played', new Date().toDateString());
+    const today = new Date().toDateString();
+    localStorage.setItem('last_played', today);
+    console.log('🔒 Game locked for:', today);
   }
 
   /** 🧪 TEST MIDNIGHT RESET (FOR DEBUGGING) */
@@ -482,10 +542,11 @@ export class GamePageComponent implements OnInit {
     // Clear today's game data
     this.clearGameForNewDay();
     
-    // Set the new word
-    this.secret = tomorrowWord;
+    console.log('✅ Reset complete! Reloading...');
     
-    console.log('✅ Reset complete! Tomorrow\'s word:', this.secret);
-    alert('✅ Game reset with TOMORROW\'s word!\n\nNew word: ' + this.secret);
+    // Reload after small delay
+    setTimeout(() => {
+      location.reload();
+    }, 500);
   }
 }
