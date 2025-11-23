@@ -97,7 +97,7 @@ export class EndModalComponent implements OnInit {
 
     const shareText =
       `Hidden Word ${resultTitle}\n` +
-      `Attempts: ${attempts}/7\n\n` +
+      `Attempts: ${attempts}/6\n\n` +
       `${emojiGrid}\n\n` +
       `Play at: ${domain}`;
 
