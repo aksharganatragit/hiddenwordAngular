@@ -22,6 +22,10 @@ interface Row {
   score?: number;
 }
 
+
+// 📊 Google Analytics helper
+
+declare let gtag: Function;
 @Component({
   selector: 'app-game-page',
   standalone: true,
@@ -62,6 +66,17 @@ export class GamePageComponent implements OnInit {
     console.log('🚀 App initialized at:', currentDate);
     
     // 🆕 STEP 1: Check version FIRST (for existing users with stale cache)
+      // 📊 Track game start
+
+    this.trackEvent('game_started', {
+
+      date: currentDate,
+
+      timestamp: new Date().toISOString()
+
+    });
+
+    
     this.checkVersionAndReset();
     
     // 🆕 STEP 2: Check if new day and clear if needed
@@ -97,7 +112,33 @@ export class GamePageComponent implements OnInit {
     this.setupMidnightWatcher();
   }
 
+
+
   /** 🆕 CHECK VERSION AND FORCE RESET IF NEEDED */
+
+  
+  private trackEvent(eventName: string, params?: any) {
+
+    try {
+
+      if (typeof gtag !== 'undefined') {
+
+        gtag('event', eventName, params);
+
+        console.log('📊 Analytics tracked:', eventName, params);
+
+      }
+
+    } catch (error) {
+
+      console.error('Analytics error:', error);
+
+    }
+
+  }
+
+
+
   private checkVersionAndReset() {
     const storedVersion = localStorage.getItem('game_version');
     
@@ -436,6 +477,19 @@ export class GamePageComponent implements OnInit {
       this.didWin = true;
       this.gameCompleted = true;
       this.showEndModal = true;
+       // 📊 Track win
+
+      this.trackEvent('game_completed', {
+
+        result: 'win',
+
+        attempts: this.currentRow + 1,
+
+        date: new Date().toDateString()
+
+      });
+
+      
       return;
     }
 
@@ -448,6 +502,19 @@ export class GamePageComponent implements OnInit {
       this.didWin = false;
       this.gameCompleted = true;
       this.showEndModal = true;
+        // 📊 Track loss
+
+      this.trackEvent('game_completed', {
+
+        result: 'loss',
+
+        attempts: this.rowsCount,
+
+        date: new Date().toDateString()
+
+      });
+
+      
     }
   }
 
