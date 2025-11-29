@@ -1,7 +1,7 @@
 :root {
-  --tile-size: min(65px, 14vh, 16vw);
+  --tile-size: min(65px, 14vh, 15vw);
   --gap-size: 5px;
-  --keyboard-height: 120px;
+  --keyboard-height: 100px;
 
   /* Header-specific vars (Updated for Christmas Funky Look) */
   --header-height: 85px;
@@ -308,6 +308,7 @@ html, body {
   overflow: hidden;
   background: #000;
   padding-top: var(--header-height);
+  padding-bottom: calc(var(--keyboard-height) + env(safe-area-inset-bottom));
   margin-top: 0;
 }
 
@@ -329,14 +330,14 @@ html, body {
 .board-container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 
   flex: 1 1 auto;
   width: 100%;
   min-height: 0;
 
-  padding-top: 3vh;
-  padding-bottom: 3vh;
+  padding-top: 2vh;
+  padding-bottom: 2vh;
   padding-left: 1vh;
   padding-right: 1vh;
 
@@ -378,16 +379,18 @@ html, body {
 .tile.absent{ background:#3a3a3a !important; border-color:#3a3a3a !important; opacity:0.75; }
 .tile.active{ border-color:white !important; transform:scale(1.05); }
 
-/* ===== KEYBOARD: sticky by default, fixed on small screens ===== */
+/* ===== KEYBOARD: fixed to bottom, bigger size ===== */
 .keyboard-container {
   width: 100%;
-  padding: 10px 8px 12px 8px;
+  padding: 12px 8px 16px 8px;
   background: linear-gradient(180deg, #000 0%, #0a0a0a 100%);
   flex-shrink: 0;
   display: flex;
   justify-content: center;
-  position: sticky;
-  bottom: env(safe-area-inset-bottom, 0);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 50;
   box-shadow: 0 -6px 18px rgba(0,0,0,0.6);
   height: var(--keyboard-height);
@@ -399,15 +402,15 @@ html, body {
   max-width: 700px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   padding-bottom: calc(env(safe-area-inset-bottom, 0) / 2);
 }
 
-.kb-row { display:flex; justify-content:center; gap:3px; width:100%; }
+.kb-row { display:flex; justify-content:center; gap:6px; width:100%; }
 .key { 
   flex: 1; 
-  min-height:40px; 
-  font-size: clamp(18px, 3vw, 28px); 
+  min-height:52px; 
+  font-size: clamp(20px, 3.5vw, 32px); 
   padding:1 0.4em; 
   background:#555; 
   border:none; 
@@ -429,7 +432,7 @@ html, body {
 
 /* ===== Ensure board doesn't get hidden when keyboard is fixed (small screens) ===== */
 @media (max-width: 600px) {
-  :root { --keyboard-height: 120px; }
+  :root { --keyboard-height: 180px; }
   .keyboard-container {
     position: fixed;
     left: 0;
@@ -438,7 +441,7 @@ html, body {
     height: var(--keyboard-height);
   }
   .game-main { padding-bottom: calc(var(--keyboard-height) + env(safe-area-inset-bottom)); }
-  .board-container { padding-bottom: 3vh; }
+  .board-container { padding-bottom: 2vh; }
 }
 
 /* ===== Height-constrained screens adjustments ===== */
@@ -449,13 +452,13 @@ html, body {
   .key { font-size: 12px; min-height: 35px; }
 }
 @media (max-height: 550px) {
-  :root { --tile-size: min(45px, 10vh, 17vw); --gap-size: 3px; --keyboard-height: 110px; }
+  :root { --tile-size: min(45px, 10vh, 17vw); --gap-size: 3px; --keyboard-height: 160px; }
   .game-header { height: 40px; }
   .keyboard-container { height: var(--keyboard-height); }
   .key { font-size: 12px; min-height: 34px; }
 }
 @media (max-height: 450px) {
-  :root { --tile-size: min(38px, 9vh, 17vw); --gap-size: 2px; --keyboard-height: 100px; }
+  :root { --tile-size: min(38px, 9vh, 17vw); --gap-size: 2px; --keyboard-height: 140px; }
   .game-header { height: 35px; }
   .game-logo { font-size: 16px; }
   .key { font-size: 9px; min-height: 28px; padding: 0 0.2em; }
