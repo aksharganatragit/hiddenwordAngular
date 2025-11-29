@@ -39,7 +39,7 @@ export class GamePageComponent implements OnInit {
   rowsCount = 6;
 
   /** 🟩 DYNAMIC SECRET WORD */
-  secret = '';
+  secret = 'Lemon';
 
   rows: Row[] = [];
   currentRow = 0;
@@ -436,11 +436,10 @@ export class GamePageComponent implements OnInit {
       this.currentCol = 0;
     }
   }
-
-  /** 🧠 WORD CHECKER */
-  evaluateGuess(guess: string) {
-    const secretArr = this.secret.split('');
-    const guessArr = guess.split('');
+evaluateGuess(guess: string) {
+    // normalize to same case so comparisons are consistent
+    const secretArr = this.secret.toUpperCase().split('');
+    const guessArr = guess.toUpperCase().split('');
     const states: CellState[] = Array(this.cols).fill('absent');
 
     // First pass: mark correct letters
@@ -459,17 +458,19 @@ export class GamePageComponent implements OnInit {
       }
     });
 
-    // Apply states and calculate score
+    // Apply states and calculate score (score = number of non-absent)
     let matchCount = 0;
+    let correctCount = 0; // <-- count positional matches for win
     states.forEach((st, i) => {
       this.rows[this.currentRow].cells[i].state = st;
       if (st !== 'absent') matchCount++;
+      if (st === 'correct') correctCount++;
     });
 
     this.rows[this.currentRow].score = matchCount;
 
-    // Check win condition
-    if (matchCount === 5) {
+    // Check win condition: require ALL letters to be correct (positional)
+    if (correctCount === this.cols) {
       console.log('🎉 PLAYER WON!');
       this.updateStats(true);
       this.lockDay();
@@ -477,19 +478,13 @@ export class GamePageComponent implements OnInit {
       this.didWin = true;
       this.gameCompleted = true;
       this.showEndModal = true;
-       // 📊 Track win
 
       this.trackEvent('game_completed', {
-
         result: 'win',
-
         attempts: this.currentRow + 1,
-
         date: new Date().toDateString()
-
       });
 
-      
       return;
     }
 
@@ -502,21 +497,94 @@ export class GamePageComponent implements OnInit {
       this.didWin = false;
       this.gameCompleted = true;
       this.showEndModal = true;
-        // 📊 Track loss
 
       this.trackEvent('game_completed', {
-
         result: 'loss',
-
         attempts: this.rowsCount,
-
         date: new Date().toDateString()
-
       });
-
-      
     }
   }
+  // /** 🧠 WORD CHECKER */
+  // evaluateGuess(guess: string) {
+  //   const secretArr = this.secret.split('');
+  //   const guessArr = guess.split('');
+  //   const states: CellState[] = Array(this.cols).fill('absent');
+
+  //   // First pass: mark correct letters
+  //   guessArr.forEach((l, i) => {
+  //     if (secretArr[i] === l) {
+  //       states[i] = 'correct';
+  //       secretArr[i] = '_';
+  //     }
+  //   });
+
+  //   // Second pass: mark present letters
+  //   guessArr.forEach((l, i) => {
+  //     if (states[i] === 'absent' && secretArr.includes(l)) {
+  //       states[i] = 'present';
+  //       secretArr[secretArr.indexOf(l)] = '_';
+  //     }
+  //   });
+
+  //   // Apply states and calculate score
+  //   let matchCount = 0;
+  //   states.forEach((st, i) => {
+  //     this.rows[this.currentRow].cells[i].state = st;
+  //     if (st !== 'absent') matchCount++;
+  //   });
+
+  //   this.rows[this.currentRow].score = matchCount;
+
+  //   // Check win condition
+  //   if (matchCount === 5) {
+  //     console.log('🎉 PLAYER WON!');
+  //     this.updateStats(true);
+  //     this.lockDay();
+  //     this.gameOver = true;
+  //     this.didWin = true;
+  //     this.gameCompleted = true;
+  //     this.showEndModal = true;
+  //      // 📊 Track win
+
+  //     this.trackEvent('game_completed', {
+
+  //       result: 'win',
+
+  //       attempts: this.currentRow + 1,
+
+  //       date: new Date().toDateString()
+
+  //     });
+
+      
+  //     return;
+  //   }
+
+  //   // Check loss condition
+  //   if (this.currentRow === this.rowsCount - 1) {
+  //     console.log('😢 Player lost - word was:', this.secret);
+  //     this.updateStats(false);
+  //     this.lockDay();
+  //     this.gameOver = true;
+  //     this.didWin = false;
+  //     this.gameCompleted = true;
+  //     this.showEndModal = true;
+  //       // 📊 Track loss
+
+  //     this.trackEvent('game_completed', {
+
+  //       result: 'loss',
+
+  //       attempts: this.rowsCount,
+
+  //       date: new Date().toDateString()
+
+  //     });
+
+      
+  //   }
+  // }
 
   /** SAVE BOARD STATE */
   saveBoardState() {
