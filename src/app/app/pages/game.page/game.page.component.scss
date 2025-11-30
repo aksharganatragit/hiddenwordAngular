@@ -1,29 +1,22 @@
 :root {
   --tile-size: min(65px, 14vh, 15vw);
   --gap-size: 5px;
-  --keyboard-height: 100px;
+  --keyboard-height: 120px;
 
-  /* Header-specific vars (Updated for Christmas Funky Look) */
+  /* Header-specific vars */
   --header-height: 85px;
-  --christmas-green-dark: #004d40;
-  --christmas-green-mid: #00897b;
-  --christmas-gold-light: #fff8e1;
-  --christmas-gold-dark: #fbc02d;
-  --christmas-red-bold: #d32f2f;
-  --border-color: rgba(255, 255, 255, 0.5);
+  --header-bg: #1a1a1a;
+  --header-border: #333;
 
-  /* Logo Colors (Funky Christmas Vibe) */
-  --logo-top-color: var(--christmas-gold-dark);
-  --logo-bottom-color: var(--christmas-red-bold);
+  /* Logo Colors */
+  --logo-top-color: #ff6b00;
+  --logo-bottom-color: #ff2a00;
 }
 
-/* Global resets remain */
-* { 
-  box-sizing: border-box; 
-  font-family: "Playfair Display", "Georgia", serif !important; 
-  font-weight: 700 !important; 
-  letter-spacing: 0.8px; 
-}
+/* Global resets */
+// * { 
+//   box-sizing: border-box; 
+// }
 
 html, body { 
   margin: 0; 
@@ -44,224 +37,154 @@ html, body {
   background: #000;
 }
 
-/* ===== HEADER (CHRISTMAS FESTIVE DESIGN) ===== */
+/* ===== HEADER ===== */
 .game-header {
   height: var(--header-height);
   min-height: var(--header-height);
   flex-shrink: 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 12px 24px;
   gap: 16px;
+  position: relative;
 
-  /* Vibrant Christmas Green Background */
-  background: linear-gradient(145deg, var(--christmas-green-dark) 0%, var(--christmas-green-mid) 100%);
+  /* Dark Background */
+  background: var(--header-bg);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   width: 100%;
   
-  /* Bold Red Border */
-  border-bottom: 3px solid var(--christmas-red-bold);
-  box-shadow: 0 10px 40px rgba(0,0,0,0.9), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  /* Bottom Border */
+  border-bottom: 2px solid var(--header-border);
+  box-shadow: none;
   
-  backdrop-filter: blur(4px); 
   z-index: 200;
   overflow: hidden; 
 }
 
-/* Decorative top highlight (Festive Gold/Red candy cane effect) */
-.game-header::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 4px;
-  background: repeating-linear-gradient(
-    45deg, 
-    var(--christmas-red-bold), 
-    var(--christmas-red-bold) 10px, 
-    var(--christmas-gold-light) 10px, 
-    var(--christmas-gold-light) 20px
-  );
-  opacity: 0.8;
-  filter: none;
-  pointer-events: none;
-  border-radius: 0; 
-  margin: 0; 
-  animation: none; 
-}
-
-/* ======================================================= */
-/* LOGO CONTAINER (Bold Red Plate Effect) */
-/* ======================================================= */
-.game-logo {
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: row; 
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  text-align: center;
-  user-select: none;
-  -webkit-user-select: none;
-
-  border-radius: 10px; 
-  padding: 10px 20px; 
-  
-  /* Rich Christmas Red background with depth */
-  background: linear-gradient(145deg, #a51c1c, #8b0000); 
-
-  /* Elegant gold border with chiseled effect */
-  position: relative;
-  border: 2px solid var(--christmas-gold-dark);
-  box-shadow: 
-    0 0 0 1px var(--christmas-gold-light),
-    0 4px 15px rgba(0,0,0,0.6),
-    inset 0 0 10px rgba(255,255,255,0.2);
-}
-
-/* ======================================================= */
-/* ICON BUTTON ENHANCEMENT (Festive Gold Buttons) */
-/* ======================================================= */
-.game-logo .help-icon,
-.game-logo .icon {
-  width: 55px; 
-  height: 55px;
-  min-width: 55px;
-  border-radius: 10px; 
-  border: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--christmas-green-dark);
-  cursor: pointer;
-  transition: all 180ms ease;
-  font-size: 28px; 
-  outline: none;
-  margin: 0 15px; 
-  
-  /* Bright Gold Appearance */
-  background: linear-gradient(145deg, var(--christmas-gold-light), var(--christmas-gold-dark)); 
-  border: 1px solid var(--christmas-gold-light); 
-  box-shadow: 
-    0 2px 8px rgba(0,0,0,0.4), 
-    inset 0 1px 3px rgba(255,255,255,0.8),
-    inset 0 -1px 3px rgba(0,0,0,0.4); 
-}
-
-/* TEXT BOX WRAPPER - Horizontal alignment */
-.logo-text-wrapper {
-  display: flex;
-  flex-direction: row; 
-  align-items: flex-end; 
-  justify-content: center;
-  gap: 6px; 
-  line-height: 1; 
-  position: relative; 
-}
-
-/* stacked logo text style */
-.game-logo .top,
-.game-logo .bottom {
-  display: block;
-  line-height: 1;
-  font-weight: 700; 
-  text-transform: uppercase;
-  letter-spacing: 2px; 
-  transform-origin: bottom left; 
-  
-  /* Chiseled/Embossed Text Effect */
-  text-shadow: 
-    1px 1px 0 rgba(0,0,0,0.6), 
-    -1px -1px 0 rgba(255,255,255,0.4); 
-}
-
-/* top word - Gold (HIDDEN) */
-.game-logo .top {
-  font-size: clamp(24px, 4.5vw, 36px); 
-  color: var(--logo-top-color); 
-  transform: translateY(0); 
-  z-index: 10;
-  align-self: flex-end; 
-}
-
-/* bottom word - Bold Red (WORD) */
-.game-logo .bottom {
-  font-size: clamp(42px, 7.5vw, 60px); 
-  color: var(--logo-bottom-color); 
-  transform: translateY(-4px); 
-  position: relative;
-  z-index: 5;
-  align-self: flex-end; 
-  
-  text-shadow: 
-    1px 1px 0 rgba(0,0,0,0.6), 
-    -1px -1px 0 rgba(255,255,255,0.4);
-}
-
-/* removing animated pulse under the bottom text */
-.game-logo .bottom::after {
-  content: none;
-  animation: none;
-}
-
-/* Standard icon buttons in the header (outside the logo pill) */
-.game-header .help-icon:not(.game-logo .help-icon),
-.game-header .icon:not(.game-logo .icon) {
+/* Help icon button (left side) */
+.game-header .help-icon {
   width: 45px; 
   height: 45px;
   min-width: 45px;
   border-radius: 10px; 
   background: rgba(255,255,255,0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.5); 
+  box-shadow: none; 
   font-size: 20px;
   color: #ffeb3b;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 180ms ease;
+  outline: none;
+  position: absolute;
+  left: 24px;
 }
 
-/* hover/active for pointer devices (Enhanced lift and glow for FESTIVE buttons) */
-@media (hover: hover) and (pointer: fine) {
-  .game-logo .help-icon:hover,
-  .game-logo .icon:hover {
-    transform: translateY(-3px) scale(1.05); 
-    box-shadow: 
-        0 8px 25px rgba(0,0,0,0.7), 
-        0 0 0 2px var(--christmas-red-bold),
-        inset 0 1px 6px rgba(255,255,255,0.8),
-        inset 0 -1px 6px rgba(0,0,0,0.6); 
-    background: linear-gradient(145deg, var(--christmas-gold-light), #daa520);
-    color: var(--christmas-green-dark);
-  }
-  .game-logo .help-icon:active,
-  .game-logo .icon:active {
-    transform: translateY(0px) scale(0.98);
-    box-shadow: 0 1px 5px rgba(0,0,0,0.8), inset 0 0 10px rgba(0,0,0,0.8); 
-  }
+/* ======================================================= */
+/* LOGO */
+/* ======================================================= */
+.game-logo {
+  font-family: "Montserrat", Arial, sans-serif;
+  font-weight: 900 !important;
+  text-transform: uppercase;
+  letter-spacing: -2px;
+  text-align: center;
+  font-size: clamp(32px, 5vw, 52px);
+  margin: 0;
+  padding: 0;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  transform: translateY(15px);
+}
 
-  /* Hover for external header icons */
-  .game-header .help-icon:not(.game-logo .help-icon):hover,
-  .game-header .icon:not(.game-logo .icon):hover {
+/* Container for stacked text */
+.overlap-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 0.85;
+}
+
+/* Top word - HIDDEN (Orange gradient) - should be on top */
+.game-logo .top {
+  display: block;
+  background: linear-gradient(180deg, #ff6b00 0%, #ff9a2a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 1em;
+  line-height: 1;
+  position: relative;
+  z-index: 5;
+  order: 1;
+}
+
+/* Bottom word - WORD (Red gradient, below and overlapping) */
+.game-logo .bottom {
+  display: block;
+  background: linear-gradient(180deg, #ff2a00 0%, #cc0000 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 1em;
+  line-height: 1;
+  position: relative;
+  top: -0.45em;
+  left: 10px;
+  z-index: 10;
+  order: 2;
+}
+
+/* Trophy/Settings icon button (right side) */
+.game-header .icon {
+  width: 45px; 
+  height: 45px;
+  min-width: 45px;
+  border-radius: 10px; 
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: none; 
+  font-size: 20px;
+  color: #ffeb3b;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 180ms ease;
+  outline: none;
+  position: absolute;
+  right: 24px;
+}
+
+/* hover/active for pointer devices */
+@media (hover: hover) and (pointer: fine) {
+  .game-header .help-icon:hover,
+  .game-header .icon:hover {
     transform: translateY(-1px) scale(1.02);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+    box-shadow: none;
     background: rgba(255,255,255,0.2);
     color: white;
   }
-  .game-header .help-icon:not(.game-logo .help-icon):active,
-  .game-header .icon:not(.game-logo .icon):active {
+  .game-header .help-icon:active,
+  .game-header .icon:active {
     transform: translateY(0) scale(0.99);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    box-shadow: none;
   }
 }
 
-/* glowing ring accent when focused (keyboard nav) - Gold/Red glow */
+/* Focus styles for keyboard nav */
 .game-header .help-icon:focus,
 .game-header .icon:focus {
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.3), 0 0 20px var(--christmas-red-bold);
+  box-shadow: none;
+  outline: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 12px;
 }
 
@@ -270,32 +193,28 @@ html, body {
   :root { --header-height: 68px; }
   .game-header { padding: 8px 12px; gap: 8px; }
   
-  .game-logo { padding: 8px 12px; border-radius: 8px; }
+  .game-logo { font-size: clamp(24px, 4vw, 32px); letter-spacing: -1px; }
   
-  .game-logo .help-icon,
-  .game-logo .icon { width: 40px; height: 40px; min-width: 40px; border-radius: 8px; font-size: 20px; margin: 0 8px; }
+  .game-header .help-icon,
+  .game-header .icon { width: 35px; height: 35px; min-width: 35px; font-size: 15px; border-radius: 8px; }
   
-  .logo-text-wrapper { gap: 3px; }
-  .game-logo .top { font-size: 18px; letter-spacing: 1px; }
-  .game-logo .bottom { font-size: 32px; transform: translateY(-2px); letter-spacing: 1px; }
-  
-  .game-header .help-icon:not(.game-logo .help-icon),
-  .game-header .icon:not(.game-logo .icon) { width: 35px; height: 35px; min-width: 35px; font-size: 15px; border-radius: 8px; }
+  .game-header .help-icon { left: 12px; }
+  .game-header .icon { right: 12px; }
 }
 
 /* Large-screen spacing */
 @media (min-width: 1200px) {
   :root { --header-height: 100px; }
   .game-header { padding: 16px 32px; }
-  .game-logo { padding: 12px 24px; }
-  .game-logo .top { font-size: 40px; letter-spacing: 3px; }
-  .game-logo .bottom { font-size: 68px; transform: translateY(-6px); letter-spacing: 3px; }
-  .game-logo .help-icon, .game-logo .icon { width: 60px; height: 60px; min-width: 60px; font-size: 30px; margin: 0 18px; }
-  .game-header .help-icon:not(.game-logo .help-icon),
-  .game-header .icon:not(.game-logo .icon) { width: 50px; height: 50px; min-width: 50px; font-size: 22px; }
+  .game-logo { font-size: 64px; }
+  .game-header .help-icon,
+  .game-header .icon { width: 50px; height: 50px; min-width: 50px; font-size: 22px; }
+  
+  .game-header .help-icon { left: 32px; }
+  .game-header .icon { right: 32px; }
 }
 
-/* ===== MAIN LAYOUT (UPDATED BACKGROUND COLOR) ===== */
+/* ===== MAIN LAYOUT ===== */
 .game-main {
   flex: 1 1 auto;
   display: flex;
@@ -312,7 +231,7 @@ html, body {
   margin-top: 0;
 }
 
-/* Error popup stays absolute relative to game-main */
+/* Error popup */
 .error-popup { 
   position: absolute; 
   top: 10px; 
@@ -326,7 +245,7 @@ html, body {
   font-weight: bold; 
 }
 
-/* ===== BOARD: flexible, centered and scrollable if needed ===== */
+/* ===== BOARD ===== */
 .board-container {
   display: flex;
   justify-content: center;
@@ -374,8 +293,18 @@ html, body {
   text-transform:uppercase; 
   border-radius:4px; 
 }
-.tile.correct{ background:#00FF57 !important; border-color:#00FF57 !important; color:black !important;}
-.tile.present{ background:#FFD800 !important; border-color:#FFD800 !important; color:black !important;}
+.tile.correct{ 
+  background:#00FF57 !important; 
+  border-color:#00FF57 !important; 
+  color:black !important;
+  box-shadow: 0 0 10px rgba(0, 255, 87, 0.5), 0 0 20px rgba(0, 255, 87, 0.3) !important;
+}
+.tile.present{ 
+  background:#FFD800 !important; 
+  border-color:#FFD800 !important; 
+  color:black !important;
+  box-shadow: 0 0 10px rgba(255, 216, 0, 0.5), 0 0 20px rgba(255, 216, 0, 0.3) !important;
+}
 .tile.absent{ background:#3a3a3a !important; border-color:#3a3a3a !important; opacity:0.75; }
 .tile.active{ border-color:white !important; transform:scale(1.05); }
 
@@ -406,13 +335,21 @@ html, body {
   padding-bottom: calc(env(safe-area-inset-bottom, 0) / 2);
 }
 
-.kb-row { display:flex; justify-content:center; gap:6px; width:100%; }
+/* Keyboard rows */
+.kb-row { 
+  display:flex; 
+  justify-content:center; 
+  gap:6px; 
+  width:100%; 
+}
+
+/* Standard keys */
 .key { 
   flex: 1; 
-  min-height:52px; 
+  min-height:54px; 
   font-size: clamp(20px, 3.5vw, 32px); 
-  padding:1 0.4em; 
-  background:#555; 
+  padding:1 0.6em; 
+  background:#818384; 
   border:none; 
   border-radius:5px; 
   color:white; 
@@ -423,12 +360,36 @@ html, body {
   align-items:center; 
   justify-content:center; 
 }
-.key:active { background:#777; }
-.kb-row button:first-child,
-.kb-row button:last-child {
-  flex: 1.5;
-  font-size: clamp(17px, 2.1vw, 20px);
+
+.key:active { 
+  background:#565758; 
 }
+
+/* Third row - Enter and Backspace (larger) */
+.kb-row:nth-child(3) button:first-child,
+.kb-row:nth-child(3) button:last-child {
+  flex: 1.5;
+  font-size: clamp(16px, 2.5vw, 20px);
+}
+
+/* First row - standard QWERTY (no offset) */
+.kb-row:first-child {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Second row - A to L row (small left offset) */
+.kb-row:nth-child(2) {
+  padding-left: 2%;
+  padding-right: 2%;
+}
+
+/* Third row - Enter, Z to M, Backspace (no extra offset, Enter/Backspace create spacing) */
+.kb-row:nth-child(3) {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 
 /* ===== Ensure board doesn't get hidden when keyboard is fixed (small screens) ===== */
 @media (max-width: 600px) {
