@@ -147,19 +147,19 @@
   box-shadow: none !important;
 }
 
-/* Tile colors - NO glow in modal */
+/* Tile colors - Vibrant with glow effects! */
 .modal-window .tile.correct {
-  background: #6aaa64 !important;
-  border-color: #6aaa64 !important;
-  color: #fff !important;
-  box-shadow: none !important;
+  background: #00FF57 !important;
+  border-color: #00FF57 !important;
+  color: #000 !important;
+  box-shadow: 0 0 10px rgba(0, 255, 87, 0.5), 0 0 20px rgba(0, 255, 87, 0.3) !important;
 }
 
 .modal-window .tile.present {
-  background: #c9b458 !important;
-  border-color: #c9b458 !important;
-  color: #fff !important;
-  box-shadow: none !important;
+  background: #FFD800 !important;
+  border-color: #FFD800 !important;
+  color: #000 !important;
+  box-shadow: 0 0 10px rgba(255, 216, 0, 0.5), 0 0 20px rgba(255, 216, 0, 0.3) !important;
 }
 
 .modal-window .tile.absent {

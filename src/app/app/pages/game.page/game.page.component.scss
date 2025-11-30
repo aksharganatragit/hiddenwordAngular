@@ -14,9 +14,9 @@
 }
 
 /* Global resets */
-// * { 
-//   box-sizing: border-box; 
-// }
+* { 
+  box-sizing: border-box; 
+}
 
 html, body { 
   margin: 0; 
@@ -95,7 +95,6 @@ html, body {
   text-transform: uppercase;
   letter-spacing: -2px;
   text-align: center;
-  font-size: clamp(32px, 5vw, 52px);
   margin: 0;
   padding: 0;
   position: relative;
@@ -193,7 +192,7 @@ html, body {
   :root { --header-height: 68px; }
   .game-header { padding: 8px 12px; gap: 8px; }
   
-  .game-logo { font-size: clamp(24px, 4vw, 32px); letter-spacing: -1px; }
+  .game-logo { font-size: clamp(32px, 5vw, 42px); letter-spacing: -1px; }
   
   .game-header .help-icon,
   .game-header .icon { width: 35px; height: 35px; min-width: 35px; font-size: 15px; border-radius: 8px; }
@@ -206,7 +205,7 @@ html, body {
 @media (min-width: 1200px) {
   :root { --header-height: 100px; }
   .game-header { padding: 16px 32px; }
-  .game-logo { font-size: 64px; }
+  .game-logo { font-size: 80px; }
   .game-header .help-icon,
   .game-header .icon { width: 50px; height: 50px; min-width: 50px; font-size: 22px; }
   
@@ -293,13 +292,13 @@ html, body {
   text-transform:uppercase; 
   border-radius:4px; 
 }
-.tile.correct{ 
+.board .tile.correct{ 
   background:#00FF57 !important; 
   border-color:#00FF57 !important; 
   color:black !important;
   box-shadow: 0 0 10px rgba(0, 255, 87, 0.5), 0 0 20px rgba(0, 255, 87, 0.3) !important;
 }
-.tile.present{ 
+.board .tile.present{ 
   background:#FFD800 !important; 
   border-color:#FFD800 !important; 
   color:black !important;
@@ -312,7 +311,7 @@ html, body {
 .keyboard-container {
   width: 100%;
   padding: 12px 8px 16px 8px;
-  background: linear-gradient(180deg, #000 0%, #0a0a0a 100%);
+  background: linear-gradient(180deg, #000 0%, #000000 100%);
   flex-shrink: 0;
   display: flex;
   justify-content: center;
@@ -349,7 +348,7 @@ html, body {
   min-height:54px; 
   font-size: clamp(20px, 3.5vw, 32px); 
   padding:1 0.6em; 
-  background:#818384; 
+  background:#25292d; 
   border:none; 
   border-radius:5px; 
   color:white; 
@@ -431,4 +430,7 @@ html, body {
   .keyboard-container {
     display: none !important;
   }
+}
+@media (min-width: 1200px) {
+  .game-logo { font-size: 65px; }
 }
