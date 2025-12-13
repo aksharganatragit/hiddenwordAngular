@@ -434,3 +434,32 @@ html, body {
 @media (min-width: 1200px) {
   .game-logo { font-size: 65px; }
 }
+/* iPhone 14 specific fix */
+@media only screen 
+  and (device-width: 390px) 
+  and (device-height: 844px) 
+  and (-webkit-device-pixel-ratio: 3) {
+  
+  :root { 
+    --keyboard-height: 160px; 
+  }
+  
+  .keyboard-container {
+    height: 160px;
+    padding: 8px 8px 12px 8px;
+  }
+  
+  .keyboard {
+    gap: 6px;
+  }
+  
+  .key {
+    min-height: 48px;
+    font-size: clamp(18px, 3vw, 28px);
+  }
+  
+  .kb-row:nth-child(3) button:first-child,
+  .kb-row:nth-child(3) button:last-child {
+    font-size: clamp(15px, 2.2vw, 18px);
+  }
+}
