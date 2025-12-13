@@ -1,17 +1,18 @@
 <div class="game-root">
   <header class="game-header">
     <!-- Help icon on the left -->
-<button class="help-icon" (click)="openHelp()" aria-label="Help">
-    <span class="icon-content">?</span>
-  </button>
+    <button class="help-icon" (click)="openHelp()" aria-label="Help">
+      <span class="icon-content">?</span>
+    </button>
     
     <!-- Centered title -->
-  <h1 class="game-logo">
-  <span class="logo-text overlap-logo">
-    <span class="top">HIDDEN</span>
-    <span class="bottom">WORD</span>
-  </span>
-</h1>
+    <h1 class="game-logo">
+      <span class="logo-text overlap-logo">
+        <span class="top">HIDDEN</span>
+        <span class="bottom">WORD</span>
+      </span>
+    </h1>
+    
     <!-- Settings icon on the right -->
     <button class="icon" aria-label="Leaderboard" (click)="openEndModal()">🏆</button>
   </header>
@@ -22,7 +23,7 @@
       {{ errorMessage }}
     </div>
     
-    <!-- 🆕 BOARD SECTION -->
+    <!-- BOARD SECTION -->
     <section class="board-container">
       <div class="board">
         <div class="row" *ngFor="let row of rows; let ri = index">
@@ -44,16 +45,16 @@
       </div>
     </section>
     
-    <!-- 🆕 SPACER DIV - This helps with flex distribution -->
-    <div class="spacer"></div>
-    
-    <!-- 🆕 KEYBOARD SECTION -->
+    <!-- KEYBOARD SECTION -->
     <section class="keyboard-container">
       <div class="keyboard">
         <div class="kb-row" *ngFor="let row of keyboardRows">
           <button
             *ngFor="let key of row"
             class="key"
+            [class.correct]="getKeyState(key) === 'correct'"
+            [class.present]="getKeyState(key) === 'present'"
+            [class.absent]="getKeyState(key) === 'absent'"
             (click)="onKey(key)"
             type="button"
           >
@@ -64,13 +65,6 @@
     </section>
   </main>
 </div>
-
-<!-- Test Button (commented out for production) -->
-<!-- <button 
-  style="position: fixed; top: 70px; right: 10px; z-index: 999; background: #ff4444; color: white; padding: 8px 12px; border-radius: 5px; font-size: 12px; cursor: pointer; border: none;"
-  (click)="testMidnightReset()">
-  🧪 Test Reset
-</button> -->
 
 <!-- Modals -->
 <app-help-modal *ngIf="showHelp" (close)="closeHelp()"></app-help-modal>

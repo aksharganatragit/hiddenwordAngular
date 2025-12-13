@@ -22,10 +22,9 @@ interface Row {
   score?: number;
 }
 
-
 // 📊 Google Analytics helper
-
 declare let gtag: Function;
+
 @Component({
   selector: 'app-game-page',
   standalone: true,
@@ -52,6 +51,9 @@ export class GamePageComponent implements OnInit {
   didWin = false;
   gameCompleted = false;
 
+  // 🆕 Keyboard state tracking
+  keyStates: Map<string, CellState> = new Map();
+
   // 🆕 Version tracking for cache busting
   private readonly GAME_VERSION = '1.0.2'; // Incremented to force reset
 
@@ -66,16 +68,11 @@ export class GamePageComponent implements OnInit {
     console.log('🚀 App initialized at:', currentDate);
     
     // 🆕 STEP 1: Check version FIRST (for existing users with stale cache)
-      // 📊 Track game start
-
+    // 📊 Track game start
     this.trackEvent('game_started', {
-
       date: currentDate,
-
       timestamp: new Date().toISOString()
-
     });
-
     
     this.checkVersionAndReset();
     
@@ -112,32 +109,17 @@ export class GamePageComponent implements OnInit {
     this.setupMidnightWatcher();
   }
 
-
-
   /** 🆕 CHECK VERSION AND FORCE RESET IF NEEDED */
-
-  
   private trackEvent(eventName: string, params?: any) {
-
     try {
-
       if (typeof gtag !== 'undefined') {
-
         gtag('event', eventName, params);
-
         console.log('📊 Analytics tracked:', eventName, params);
-
       }
-
     } catch (error) {
-
       console.error('Analytics error:', error);
-
     }
-
   }
-
-
 
   private checkVersionAndReset() {
     const storedVersion = localStorage.getItem('game_version');
@@ -259,6 +241,9 @@ export class GamePageComponent implements OnInit {
     this.currentCol = 0;
     this.errorMessage = '';
     
+    // 🆕 RESET KEYBOARD STATES
+    this.keyStates.clear();
+    
     console.log('✅ Game data cleared successfully');
   }
 
@@ -292,6 +277,14 @@ export class GamePageComponent implements OnInit {
         }
       })
     );
+
+    // 🆕 RESTORE KEYBOARD STATES from completed rows
+    grid.forEach((row: any, ri: number) => {
+      const hasContent = row.some((c: any) => c.letter !== "");
+      if (hasContent) {
+        this.updateKeyboardStates(this.rows[ri].cells);
+      }
+    });
 
     // Find next empty row
     this.currentRow = grid.findIndex((r: any) => r.some((c: any) => c.letter === ""));
@@ -389,6 +382,9 @@ export class GamePageComponent implements OnInit {
         state: '' as CellState,
       })),
     }));
+    
+    // 🆕 RESET KEYBOARD STATES when initializing
+    this.keyStates.clear();
   }
 
   /** KEY ENTRY */
@@ -436,7 +432,9 @@ export class GamePageComponent implements OnInit {
       this.currentCol = 0;
     }
   }
-evaluateGuess(guess: string) {
+
+  /** 🧠 WORD CHECKER */
+  evaluateGuess(guess: string) {
     // normalize to same case so comparisons are consistent
     const secretArr = this.secret.toUpperCase().split('');
     const guessArr = guess.toUpperCase().split('');
@@ -468,6 +466,9 @@ evaluateGuess(guess: string) {
     });
 
     this.rows[this.currentRow].score = matchCount;
+
+    // 🆕 UPDATE KEYBOARD STATES AFTER EVALUATING
+    this.updateKeyboardStates(this.rows[this.currentRow].cells);
 
     // Check win condition: require ALL letters to be correct (positional)
     if (correctCount === this.cols) {
@@ -505,86 +506,35 @@ evaluateGuess(guess: string) {
       });
     }
   }
-  // /** 🧠 WORD CHECKER */
-  // evaluateGuess(guess: string) {
-  //   const secretArr = this.secret.split('');
-  //   const guessArr = guess.split('');
-  //   const states: CellState[] = Array(this.cols).fill('absent');
 
-  //   // First pass: mark correct letters
-  //   guessArr.forEach((l, i) => {
-  //     if (secretArr[i] === l) {
-  //       states[i] = 'correct';
-  //       secretArr[i] = '_';
-  //     }
-  //   });
+  /** 🆕 GET KEYBOARD KEY STATE */
+  getKeyState(key: string): CellState {
+    // Special keys don't get colored
+    if (key === 'Enter' || key === 'Backspace') {
+      return '';
+    }
+    
+    const state = this.keyStates.get(key.toUpperCase());
+    return state || '';
+  }
 
-  //   // Second pass: mark present letters
-  //   guessArr.forEach((l, i) => {
-  //     if (states[i] === 'absent' && secretArr.includes(l)) {
-  //       states[i] = 'present';
-  //       secretArr[secretArr.indexOf(l)] = '_';
-  //     }
-  //   });
-
-  //   // Apply states and calculate score
-  //   let matchCount = 0;
-  //   states.forEach((st, i) => {
-  //     this.rows[this.currentRow].cells[i].state = st;
-  //     if (st !== 'absent') matchCount++;
-  //   });
-
-  //   this.rows[this.currentRow].score = matchCount;
-
-  //   // Check win condition
-  //   if (matchCount === 5) {
-  //     console.log('🎉 PLAYER WON!');
-  //     this.updateStats(true);
-  //     this.lockDay();
-  //     this.gameOver = true;
-  //     this.didWin = true;
-  //     this.gameCompleted = true;
-  //     this.showEndModal = true;
-  //      // 📊 Track win
-
-  //     this.trackEvent('game_completed', {
-
-  //       result: 'win',
-
-  //       attempts: this.currentRow + 1,
-
-  //       date: new Date().toDateString()
-
-  //     });
-
+  /** 🆕 UPDATE KEYBOARD STATES */
+  private updateKeyboardStates(rowCells: Cell[]) {
+    rowCells.forEach(cell => {
+      const letter = cell.letter.toUpperCase();
+      const currentState = this.keyStates.get(letter);
       
-  //     return;
-  //   }
-
-  //   // Check loss condition
-  //   if (this.currentRow === this.rowsCount - 1) {
-  //     console.log('😢 Player lost - word was:', this.secret);
-  //     this.updateStats(false);
-  //     this.lockDay();
-  //     this.gameOver = true;
-  //     this.didWin = false;
-  //     this.gameCompleted = true;
-  //     this.showEndModal = true;
-  //       // 📊 Track loss
-
-  //     this.trackEvent('game_completed', {
-
-  //       result: 'loss',
-
-  //       attempts: this.rowsCount,
-
-  //       date: new Date().toDateString()
-
-  //     });
-
-      
-  //   }
-  // }
+      // Priority: correct > present > absent
+      // Don't downgrade a key's state
+      if (cell.state === 'correct') {
+        this.keyStates.set(letter, 'correct');
+      } else if (cell.state === 'present' && currentState !== 'correct') {
+        this.keyStates.set(letter, 'present');
+      } else if (cell.state === 'absent' && !currentState) {
+        this.keyStates.set(letter, 'absent');
+      }
+    });
+  }
 
   /** SAVE BOARD STATE */
   saveBoardState() {
@@ -618,6 +568,7 @@ evaluateGuess(guess: string) {
         didWin: this.didWin,
         gameCompleted: this.gameCompleted
       });
+      console.log('Keyboard states:', this.keyStates);
     }
   }
 
