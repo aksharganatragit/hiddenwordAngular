@@ -558,15 +558,53 @@ html, body {
 
 .legal-menu {
   position: absolute;
-  right: 80px;      /* spacing from trophy */
-  top: 24px;        /* EXACT same vertical alignment as 🏆 */
+  right: 80px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
 }
 
 .legal-trigger {
+  width: 45px; 
+  height: 45px;
+  min-width: 45px;
+  border-radius: 10px; 
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   font-size: 18px;
+  color: #ffeb3b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 180ms ease;
+  outline: none;
   opacity: 0.9;
+  border: none;
+  padding: 0;
 }
 
+/* Mobile spacing */
+@media (max-width: 520px) {
+  .legal-menu {
+    right: 58px;
+  }
+}
+
+/* Tablet spacing */
+@media (min-width: 521px) and (max-width: 1024px) {
+  .legal-menu {
+    right: 75px;
+  }
+}
+
+/* Desktop spacing - more room */
+@media (min-width: 1025px) {
+  .legal-menu {
+    right: 92px;
+  }
+}
 /* Dropdown panel */
 .legal-dropdown {
   position: absolute;
