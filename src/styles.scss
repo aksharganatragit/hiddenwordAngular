@@ -34,13 +34,7 @@ html, body {
 body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   color: #fff;
-  position: fixed; // ✅ Lock viewport
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overscroll-behavior: none;
-  touch-action: none;
+  background: #000;
 }
 
 button, a {
@@ -57,7 +51,7 @@ app-main-layout {
   flex-direction: column;
   height: 100vh;
   width: 100vw;
-  overflow: hidden;
+  overflow: visible;
 }
 
 // Game layout (no footer, full screen)
@@ -68,7 +62,7 @@ app-game-layout {
   height: 100vh;
   width: 100vw;
   padding: 1.5rem;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* =========================================
@@ -86,7 +80,7 @@ app-header {
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden; // No scroll
+  overflow: visible; // No scroll
   min-height: 0; // ✅ Critical for nested flex
 }
 
