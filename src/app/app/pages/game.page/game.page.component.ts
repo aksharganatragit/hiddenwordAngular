@@ -2,13 +2,14 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { NgIf, NgFor, CommonModule } from '@angular/common';
 import { ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { RouterLink } from '@angular/router';
 import { HelpModalComponent } from '../../shared/help-modal/help-modal.component';
 import { EndModalComponent } from '../../shared/end-modal/end-modal.component';
 
 import { WORD_LIST, VALID_WORDS } from '../game.page/words';
 
 import { MatIconModule } from '@angular/material/icon';
+
 
 type CellState = 'correct' | 'present' | 'absent' | '';
 
@@ -28,7 +29,7 @@ declare let gtag: Function;
 @Component({
   selector: 'app-game-page',
   standalone: true,
-  imports: [NgIf, NgFor, CommonModule, HelpModalComponent, EndModalComponent, MatIconModule],
+  imports: [NgIf, NgFor, CommonModule, HelpModalComponent, EndModalComponent, MatIconModule,  RouterLink],
   templateUrl: './game.page.component.html',
   styleUrls: ['./game.page.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -50,6 +51,7 @@ export class GamePageComponent implements OnInit {
   gameOver = false;
   didWin = false;
   gameCompleted = false;
+  showLegalMenu = false;
 
   // 🆕 Keyboard state tracking
   keyStates: Map<string, CellState> = new Map();
@@ -108,7 +110,21 @@ export class GamePageComponent implements OnInit {
     // 🆕 STEP 8: Setup midnight auto-reset
     this.setupMidnightWatcher();
   }
+toggleLegalMenu() {
+  this.showLegalMenu = !this.showLegalMenu;
+}
+@HostListener('document:click', ['$event'])
+handleDocumentClick(event: MouseEvent) {
+  const target = event.target as HTMLElement;
 
+  // If click is NOT inside the legal menu or trigger → close it
+  if (!target.closest('.legal-menu')) {
+    this.showLegalMenu = false;
+  }
+}
+closeLegalMenu() {
+  this.showLegalMenu = false;
+}
   /** 🆕 CHECK VERSION AND FORCE RESET IF NEEDED */
   private trackEvent(eventName: string, params?: any) {
     try {

@@ -1,0 +1,38 @@
+.article-detail {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 72px 16px 96px;
+}
+
+.article-detail h1 {
+  font-size: 42px;
+  margin-bottom: 8px;
+}
+
+.article-detail .date {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 32px;
+}
+
+.article-detail .content {
+  line-height: 1.9;
+  font-size: 16px;
+}
+
+.article-detail .content h2 {
+  margin-top: 40px;
+  margin-bottom: 12px;
+}
+
+.article-detail .content p {
+  margin: 16px 0;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .article-detail h1 {
+    font-size: 30px;
+  }
+}

@@ -1,0 +1,29 @@
+@import './styles/legal';
+.legal-page {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 16px;
+  line-height: 1.7;
+
+  h1 {
+    margin-bottom: 8px;
+  }
+
+  h2 {
+    margin-top: 24px;
+  }
+
+  .updated {
+    font-size: 14px;
+    color: #888;
+  }
+}
+
+.sitemap-list {
+  list-style: none;
+  padding: 0;
+
+  li {
+    margin: 8px 0;
+  }
+}

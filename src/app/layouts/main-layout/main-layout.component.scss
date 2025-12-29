@@ -1,0 +1,17 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; // Ensures footer stays at bottom on short pages
+}
+
+/* Middle content stretches to push footer down */
+.page-content {
+  flex: 1;
+  overflow-y: auto;   /* ✅ THIS ENABLES SCROLL */
+  overflow-x: hidden;
+}
+
+/* Optional: Add this if footer still has issues */
+app-footer {
+  flex-shrink: 0; // Prevents footer from being compressed
+}

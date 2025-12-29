@@ -1,6 +1,4 @@
-
 // Custom Theming for Angular Material
-// For more information: https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 
 html {
@@ -13,56 +11,132 @@ html {
     typography: Roboto,
     density: 0,
   ));
-}/* You can add global styles to this file, and also import other style files */
-/* Reset and prevent scrollbars globally */
+}
+
+/* =========================================
+   🌐 GLOBAL RESET - NO SCROLL ANYWHERE
+   ========================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 html, body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    height: 100%;
-    width: 100%;
-    background: #000; /* your default app background */
-  }
-  
-  /* Inherit box-sizing for all elements */
-  *, *::before, *::after {
-    box-sizing: inherit;
-  }
-  
-  /* Prevent scroll on mobile browsers */
-  body {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow: hidden;
-    overscroll-behavior: none;
-    touch-action: none; /* disables accidental swipes/scrolls */
-    -webkit-overflow-scrolling: auto;
-    display: flex;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; // ✅ No scroll
+  height: 100%;
+  width: 100%;
+  background: #000;
+}
+
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  color: #fff;
+  position: fixed; // ✅ Lock viewport
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overscroll-behavior: none;
+  touch-action: none;
+}
+
+button, a {
+  outline: none;
+}
+
+/* =========================================
+   📐 LAYOUT SYSTEM - Fits everything in viewport
+   ========================================= */
+
+// Main layout container (header + content + footer)
+app-main-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+// Game layout (no footer, full screen)
+app-game-layout {
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem; /* ✅ Global margin effect */
-  box-sizing: border-box;
+  height: 100vh;
+  width: 100vw;
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+/* =========================================
+   🎯 HEADER - Fixed height
+   ========================================= */
+app-header {
+  flex-shrink: 0; // Don't compress
+  // Your header styles here
+}
+
+/* =========================================
+   📄 CONTENT AREA - Takes remaining space
+   ========================================= */
+.page-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; // No scroll
+  min-height: 0; // ✅ Critical for nested flex
+}
+
+/* =========================================
+   🦶 FOOTER - Fixed height at bottom
+   ========================================= */
+app-footer {
+  flex-shrink: 0; // ✅ Don't compress
+  display: block;
+}
+
+.footer {
+  padding: 10px 16px;
+  background: #0f0f0f;
+  color: #aaa;
+  font-size: 11px;
+  text-align: center;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 4px 12px;
+  
+  span, a {
+    white-space: nowrap;
+  }
+}
+
+.footer a {
+  color: #aaa;
+  text-decoration: none;
+  
+  &:hover {
+    color: #fff;
+  }
+}
+
+/* =========================================
+   📱 MOBILE - Smaller footer
+   ========================================= */
+@media (max-width: 768px) {
+  .footer {
+    font-size: 10px;
+    padding: 8px;
   }
   
-  /* Root container to occupy the full screen */
-  app-root, .app-root, :host {
-    display: block;
-    width: 100%;
-    height: 100%;
-    max-width: calc(100vw - 3rem); /* left + right padding combined */
-    max-height: calc(100vh - 3rem); /* top + bottom padding combined */
-    overflow: hidden;
-    background: #000;
-    border-radius: 12px; /* optional, looks nice on big screens */
+  .footer-links {
+    gap: 2px 8px;
   }
-  
-  /* Remove default outline, optional for cleaner UI */
-  button, a {
-    outline: none;
-  }
-  
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+}

@@ -15,6 +15,26 @@
     
     <!-- Settings icon on the right -->
     <button class="icon" aria-label="Leaderboard" (click)="openEndModal()">🏆</button>
+    <!-- Legal dropdown (added) -->
+<div class="legal-menu">
+  <button
+    class="icon legal-trigger"
+    aria-label="Legal information"
+    (click)="toggleLegalMenu()"
+  >
+    ⓘ
+  </button>
+
+  <div class="legal-dropdown" *ngIf="showLegalMenu">
+    <div class="legal-title" >© 2025 Hidden Word</div>
+    <a routerLink="/articles" (click)="closeLegalMenu()">Articles</a>
+    <a routerLink="/privacy-policy" (click)="closeLegalMenu()">Privacy Policy</a>
+    <a routerLink="/terms-of-service" (click)="closeLegalMenu()">Terms of Service</a>
+    <a routerLink="/cookie-policy" (click)="closeLegalMenu()">Cookie Policy</a>
+    <a routerLink="/terms-of-sale" (click)="closeLegalMenu()">Terms of Sale</a>
+    <a routerLink="/sitemap" (click)="closeLegalMenu()">Sitemap</a>
+  </div>
+</div>
   </header>
   
   <main class="game-main">

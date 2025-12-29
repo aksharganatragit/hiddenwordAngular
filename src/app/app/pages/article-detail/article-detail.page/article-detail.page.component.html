@@ -1,0 +1,6 @@
+<section class="article-detail" *ngIf="article">
+  <h1>{{ article.title }}</h1>
+  <p class="date">{{ article.publishedAt }}</p>
+
+  <div class="content" [innerHTML]="article.content"></div>
+</section>
