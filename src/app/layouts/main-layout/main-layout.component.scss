@@ -1,18 +1,19 @@
 :host {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; // Ensures footer stays at bottom on short pages
+  min-height: 100vh; /* ⬅ key */
 }
 
-/* Middle content stretches to push footer down */
+/* Main content grows naturally */
 .page-content {
-  flex: 1;
-  overflow-y: auto;
-  padding-bottom: 56px; /* ⬅ footer height */
+  flex: 1 0 auto;   /* ⬅ NOT flex: 1 */
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
-/* Optional: Add this if footer still has issues */
+/* Footer behavior magic */
 app-footer {
-  margin-top: auto; /* ⬅ THIS pins footer to bottom */
+  margin-top: auto; /* ⬅ THIS is the magic line */
   flex-shrink: 0;
 }
