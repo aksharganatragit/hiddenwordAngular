@@ -88,8 +88,9 @@ app-header {
    🦶 FOOTER - Fixed height at bottom
    ========================================= */
 app-footer {
-  flex-shrink: 0; // ✅ Don't compress
-  display: block;
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
 }
 
 .footer {

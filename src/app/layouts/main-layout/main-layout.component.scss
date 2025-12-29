@@ -6,9 +6,9 @@
 
 /* Middle content stretches to push footer down */
 .page-content {
-  flex: 1 0 auto;   /* ⬅ change from just flex: 1 */
-  display: flex;
-  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 56px; /* ⬅ footer height */
 }
 
 /* Optional: Add this if footer still has issues */
