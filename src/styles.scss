@@ -77,18 +77,20 @@ app-header {
    📄 CONTENT AREA - Takes remaining space
    ========================================= */
 .page-content {
-  flex: 1 0 auto;   /* ⬅ IMPORTANT */
+  flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 0;
+  overflow: visible; // No scroll
+  min-height: 0; // ✅ Critical for nested flex
 }
 
 /* =========================================
    🦶 FOOTER - Fixed height at bottom
    ========================================= */
 app-footer {
-  margin-top: auto;  /* ⬅ THE MAGIC LINE */
-  flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
 }
 
 .footer {
