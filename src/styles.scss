@@ -96,7 +96,7 @@ app-footer {
   padding: 10px 16px;
   background: #0f0f0f;
   color: #aaa;
-  font-size: 11px;
+   font-size: 14px;   /* ⬅ increased from 11px */
   text-align: center;
 }
 
@@ -126,8 +126,8 @@ app-footer {
    ========================================= */
 @media (max-width: 768px) {
   .footer {
-    font-size: 10px;
-    padding: 8px;
+     font-size: 13px;
+    padding: 16px 12px;
   }
   
   .footer-links {
