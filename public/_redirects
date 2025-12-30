@@ -1,1 +1,6 @@
-/*   /index.html   200
+# Allow real files first
+/sitemap.xml   /sitemap.xml   200
+/robots.txt    /robots.txt    200
+
+# SPA fallback
+/*             /index.html    200
