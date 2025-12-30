@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Home -->
+  <url>
+    <loc>https://hiddenword.co/</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Game -->
+  <url>
+    <loc>https://hiddenword.co/game</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Help -->
+  <url>
+    <loc>https://hiddenword.co/help</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Articles index -->
+  <url>
+    <loc>https://hiddenword.co/articles</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Legal pages -->
+  <url>
+    <loc>https://hiddenword.co/privacy-policy</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://hiddenword.co/terms-of-service</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://hiddenword.co/cookie-policy</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://hiddenword.co/terms-of-sale</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <!-- Human sitemap page (optional, OK to include) -->
+  <url>
+    <loc>https://hiddenword.co/sitemap</loc>
+    <priority>0.3</priority>
+  </url>
+
+</urlset>
