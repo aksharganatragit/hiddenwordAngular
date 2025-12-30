@@ -1,7 +1,7 @@
 :root {
   --tile-size: min(65px, 14vh, 15vw);
   --gap-size: 5px;
-  --keyboard-height: 100px; /* Reduced from 120px */
+  --keyboard-height: 100px;
 
   /* Header-specific vars */
   --header-height: 85px;
@@ -71,7 +71,118 @@ html, body {
   overflow: visible; 
 }
 
-/* Help icon button (left side) */
+/* LEFT ACTIONS CONTAINER */
+.left-actions {
+  position: absolute;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* COFFEE CONTAINER (for tooltip positioning) */
+.coffee-container {
+  position: relative;
+  display: inline-flex;
+}
+
+/* COFFEE BUTTON */
+.coffee-btn {
+  width: 45px;
+  height: 45px;
+  min-width: 45px;
+  border-radius: 10px;
+  background: rgba(255, 221, 0, 0.15);
+  border: 1px solid rgba(255, 221, 0, 0.3);
+  font-size: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 180ms ease;
+  text-decoration: none;
+  outline: none;
+  filter: grayscale(0);
+}
+
+/* COFFEE TOOLTIP */
+.coffee-tooltip {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 12px);
+  transform: translateY(-50%) translateX(-10px);
+  background: linear-gradient(135deg, #ffdd00 0%, #ffa500 100%);
+  color: #000;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  box-shadow: 0 4px 15px rgba(255, 221, 0, 0.4);
+  z-index: 1000;
+}
+
+/* Tooltip arrow */
+.coffee-tooltip::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -8px;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 8px 8px 8px 0;
+  border-color: transparent #ffdd00 transparent transparent;
+}
+
+/* Show tooltip on hover (desktop) */
+@media (hover: hover) and (pointer: fine) {
+  .coffee-container:hover .coffee-tooltip {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+  
+  .coffee-btn:hover {
+    transform: translateY(-1px) scale(1.05);
+    background: rgba(255, 221, 0, 0.25);
+    border-color: rgba(255, 221, 0, 0.5);
+    box-shadow: 0 4px 12px rgba(255, 221, 0, 0.2);
+    animation: coffeePulse 0.6s ease-in-out;
+  }
+  
+  .coffee-btn:active {
+    transform: translateY(0) scale(0.98);
+  }
+}
+
+/* Show tooltip on touch/active (mobile) */
+.coffee-btn:active ~ .coffee-tooltip,
+.coffee-container:active .coffee-tooltip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Coffee button pulse animation */
+@keyframes coffeePulse {
+  0%, 100% { transform: translateY(-1px) scale(1.05); }
+  50% { transform: translateY(-1px) scale(1.1); }
+}
+
+/* Floating animation for tooltip */
+@keyframes tooltipFloat {
+  0%, 100% { transform: translateY(-50%) translateX(0) translateY(0); }
+  50% { transform: translateY(-50%) translateX(0) translateY(-3px); }
+}
+
+.coffee-container:hover .coffee-tooltip {
+  animation: tooltipFloat 2s ease-in-out infinite;
+}
+
+/* Help icon button */
 .game-header .help-icon {
   width: 45px; 
   height: 45px;
@@ -88,8 +199,6 @@ html, body {
   cursor: pointer;
   transition: all 180ms ease;
   outline: none;
-  position: absolute;
-  left: 24px;
 }
 
 /* ======================================================= */
@@ -148,7 +257,16 @@ html, body {
   order: 2;
 }
 
-/* Trophy/Settings icon button (right side) */
+/* RIGHT ACTIONS CONTAINER */
+.right-actions {
+  position: absolute;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Trophy/Settings icon button */
 .game-header .icon {
   width: 45px; 
   height: 45px;
@@ -165,8 +283,6 @@ html, body {
   cursor: pointer;
   transition: all 180ms ease;
   outline: none;
-  position: absolute;
-  right: 24px;
 }
 
 /* hover/active for pointer devices */
@@ -187,7 +303,8 @@ html, body {
 
 /* Focus styles for keyboard nav */
 .game-header .help-icon:focus,
-.game-header .icon:focus {
+.game-header .icon:focus,
+.coffee-btn:focus {
   box-shadow: none;
   outline: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 12px;
@@ -200,11 +317,32 @@ html, body {
   
   .game-logo { font-size: clamp(32px, 5vw, 42px); letter-spacing: -1px; }
   
-  .game-header .help-icon,
-  .game-header .icon { width: 35px; height: 35px; min-width: 35px; font-size: 15px; border-radius: 8px; }
+  .left-actions { left: 12px; gap: 8px; }
+  .right-actions { right: 12px; gap: 8px; }
   
-  .game-header .help-icon { left: 12px; }
-  .game-header .icon { right: 12px; }
+  .game-header .help-icon,
+  .game-header .icon,
+  .coffee-btn { 
+    width: 35px; 
+    height: 35px; 
+    min-width: 35px; 
+    font-size: 15px; 
+    border-radius: 8px; 
+  }
+  
+  .coffee-btn { font-size: 18px; }
+  
+  /* Mobile tooltip adjustments */
+  .coffee-tooltip {
+    font-size: 12px;
+    padding: 6px 12px;
+    left: calc(100% + 8px);
+  }
+  
+  .coffee-tooltip::before {
+    border-width: 6px 6px 6px 0;
+    left: -6px;
+  }
 }
 
 /* Large-screen spacing */
@@ -212,11 +350,20 @@ html, body {
   :root { --header-height: 100px; }
   .game-header { padding: 16px 32px; }
   .game-logo { font-size: 80px; }
-  .game-header .help-icon,
-  .game-header .icon { width: 50px; height: 50px; min-width: 50px; font-size: 22px; }
   
-  .game-header .help-icon { left: 32px; }
-  .game-header .icon { right: 32px; }
+  .left-actions { left: 32px; gap: 16px; }
+  .right-actions { right: 32px; gap: 16px; }
+  
+  .game-header .help-icon,
+  .game-header .icon,
+  .coffee-btn { 
+    width: 50px; 
+    height: 50px; 
+    min-width: 50px; 
+    font-size: 22px; 
+  }
+  
+  .coffee-btn { font-size: 24px; }
 }
 
 /* ===== MAIN LAYOUT ===== */
@@ -329,7 +476,7 @@ html, body {
 /* ===== KEYBOARD: fixed to bottom, bigger size ===== */
 .keyboard-container {
   width: 100%;
-  padding: 8px 0 12px 0; /* Remove horizontal padding */
+  padding: 8px 0 12px 0;
   background: linear-gradient(180deg, #000 0%, #000000 100%);
   flex-shrink: 0;
   display: flex;
@@ -342,16 +489,16 @@ html, body {
   box-shadow: 0 -6px 18px rgba(0,0,0,0.6);
   height: var(--keyboard-height);
   align-items: center;
-  overflow: hidden; /* Prevent any overflow */
+  overflow: hidden;
 }
 
 .keyboard {
   width: 100%;
-  max-width: 100vw; /* Use viewport width instead of fixed pixels */
+  max-width: 100vw;
   display: flex;
   flex-direction: column;
   gap: 5px;
-  padding: 0 5px; /* Minimal padding */
+  padding: 0 5px;
   padding-bottom: calc(env(safe-area-inset-bottom, 0) / 2);
   box-sizing: border-box;
 }
@@ -367,7 +514,7 @@ html, body {
 
 .key { 
   flex: 1; 
-  min-height: 54px;  /* <-- This line was cut off, showing only "px;" */
+  min-height: 54px;
   font-size: clamp(20px, 5vw, 32px);
   padding: 0 0.6em; 
   background:#25292d; 
@@ -438,10 +585,10 @@ html, body {
 /* Third row - Enter and Backspace (larger) */
 .kb-row:nth-child(3) button:first-child,
 .kb-row:nth-child(3) button:last-child {
-  flex: 1.5 1 0; /* Slightly larger but still flexible */
+  flex: 1.5 1 0;
   font-size: clamp(10px, 2vw, 14px);
   padding: 0;
-  max-width: none; /* Remove constraint */
+  max-width: none;
 }
 
 /* First row - standard QWERTY (no offset) */
@@ -471,10 +618,10 @@ html, body {
     padding: 8px 0 12px 0;
   }
   .keyboard {
-    padding: 0 3px; /* Even tighter on small screens */
+    padding: 0 3px;
   }
   .kb-row {
-    gap: 2px; /* Smaller gap on mobile */
+    gap: 2px;
   }
   .key {
     min-height: 48px;
@@ -552,15 +699,13 @@ html, body {
     font-size: clamp(10px, 2vw, 14px);
   }
 }
+
 /* ===============================
    LEGAL DROPDOWN (GAME HEADER)
 =============================== */
 
 .legal-menu {
-  position: absolute;
-  right: 80px;
-  top: 50%;
-  transform: translateY(-50%);
+  position: relative;
   display: flex;
   align-items: center;
 }
@@ -581,35 +726,14 @@ html, body {
   transition: all 180ms ease;
   outline: none;
   opacity: 0.9;
-  border: none;
   padding: 0;
 }
 
-/* Mobile spacing */
-@media (max-width: 520px) {
-  .legal-menu {
-    right: 58px;
-  }
-}
-
-/* Tablet spacing */
-@media (min-width: 521px) and (max-width: 1024px) {
-  .legal-menu {
-    right: 75px;
-  }
-}
-
-/* Desktop spacing - more room */
-@media (min-width: 1025px) {
-  .legal-menu {
-    right: 92px;
-  }
-}
 /* Dropdown panel */
 .legal-dropdown {
   position: absolute;
   right: 0;
-  top: 44px;
+  top: 55px;
   min-width: 220px;
   background: #111;
   border-radius: 14px;

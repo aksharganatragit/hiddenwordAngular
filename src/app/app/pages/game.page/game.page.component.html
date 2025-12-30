@@ -1,41 +1,61 @@
 <div class="game-root">
-  <header class="game-header">
-    <!-- Help icon on the left -->
+ <header class="game-header">
+
+  <!-- LEFT: Coffee + Help -->
+  <div class="left-actions">
+    
     <button class="help-icon" (click)="openHelp()" aria-label="Help">
       <span class="icon-content">?</span>
     </button>
-    
-    <!-- Centered title -->
-    <h1 class="game-logo">
-      <span class="logo-text overlap-logo">
-        <span class="top">HIDDEN</span>
-        <span class="bottom">WORD</span>
-      </span>
-    </h1>
-    
-    <!-- Settings icon on the right -->
-    <button class="icon" aria-label="Leaderboard" (click)="openEndModal()">🏆</button>
-    <!-- Legal dropdown (added) -->
-<div class="legal-menu">
-  <button
-    class="icon legal-trigger"
-    aria-label="Legal information"
-    (click)="toggleLegalMenu()"
-  >
-    ⓘ
-  </button>
+    <div class="coffee-container">
+      <a
+        href="https://www.buymeacoffee.com/YOUR_USERNAME"
+        target="_blank"
+        rel="noopener"
+        class="coffee-btn"
+        aria-label="Buy me a coffee"
+      >
+        ☕
+      </a>
+      <span class="coffee-tooltip">Buy me a coffee! ☕</span>
+    </div>
 
-  <div class="legal-dropdown" *ngIf="showLegalMenu">
-    <div class="legal-title" >© 2025 Hidden Word</div>
-    <a routerLink="/articles" (click)="closeLegalMenu()">Articles</a>
-    <a routerLink="/privacy-policy" (click)="closeLegalMenu()">Privacy Policy</a>
-    <a routerLink="/terms-of-service" (click)="closeLegalMenu()">Terms of Service</a>
-    <a routerLink="/cookie-policy" (click)="closeLegalMenu()">Cookie Policy</a>
-    <a routerLink="/terms-of-sale" (click)="closeLegalMenu()">Terms of Sale</a>
-    <a routerLink="/sitemap" (click)="closeLegalMenu()">Sitemap</a>
   </div>
-</div>
-  </header>
+
+  <!-- CENTER: Title -->
+  <h1 class="game-logo">
+    <span class="logo-text overlap-logo">
+      <span class="top">HIDDEN</span>
+      <span class="bottom">WORD</span>
+    </span>
+  </h1>
+
+  <!-- RIGHT: Leaderboard + Legal -->
+  <div class="right-actions">
+    <button class="icon" aria-label="Leaderboard" (click)="openEndModal()">🏆</button>
+
+    <div class="legal-menu">
+      <button
+        class="icon legal-trigger"
+        aria-label="Legal information"
+        (click)="toggleLegalMenu()"
+      >
+        ⓘ
+      </button>
+
+      <div class="legal-dropdown" *ngIf="showLegalMenu">
+        <div class="legal-title">© 2025 Hidden Word</div>
+        <a routerLink="/articles" (click)="closeLegalMenu()">Articles</a>
+        <a routerLink="/privacy-policy" (click)="closeLegalMenu()">Privacy Policy</a>
+        <a routerLink="/terms-of-service" (click)="closeLegalMenu()">Terms of Service</a>
+        <a routerLink="/cookie-policy" (click)="closeLegalMenu()">Cookie Policy</a>
+        <a routerLink="/terms-of-sale" (click)="closeLegalMenu()">Terms of Sale</a>
+        <a routerLink="/sitemap" (click)="closeLegalMenu()">Sitemap</a>
+      </div>
+    </div>
+  </div>
+
+</header>
   
   <main class="game-main">
     <!-- Error Message -->

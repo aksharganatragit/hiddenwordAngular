@@ -1,15 +1,33 @@
-<section class="legal-page">
-  <h1>Sitemap</h1>
+<section class="legal-page sitemap-page">
+  <header class="sitemap-header">
+    <h1>Sitemap</h1>
+    <p class="subtitle">
+      Browse all sections of the Hidden Word website
+    </p>
+  </header>
 
-  <ul class="sitemap-list">
-    <li><a routerLink="/">Home</a></li>
-    <li><a routerLink="/game">Play Game</a></li>
-    <li><a routerLink="/articles">Articles</a></li>
-    <li><a routerLink="/help">Help</a></li>
+  <div class="sitemap-two-col">
+    <!-- MAIN PAGES -->
+    <div class="sitemap-section">
+      <h2>Main Pages</h2>
 
-    <li><a routerLink="/privacy-policy">Privacy Policy</a></li>
-    <li><a routerLink="/terms-of-service">Terms of Service</a></li>
-    <li><a routerLink="/cookie-policy">Cookie Policy</a></li>
-    <li><a routerLink="/terms-of-sale">Terms of Sale</a></li>
-  </ul>
+      <ul class="sitemap-links">
+        <li><a routerLink="/">🏠 Home</a></li>
+        <li><a routerLink="/game">🎮 Play Game</a></li>
+        <li><a routerLink="/articles">🧠 Articles & Tips</a></li>
+      </ul>
+    </div>
+
+    <!-- LEGAL -->
+    <div class="sitemap-section">
+      <h2>Legal</h2>
+
+      <ul class="sitemap-links">
+        <li><a routerLink="/privacy-policy">Privacy Policy</a></li>
+        <li><a routerLink="/terms-of-service">Terms of Service</a></li>
+        <li><a routerLink="/cookie-policy">Cookie Policy</a></li>
+        <li><a routerLink="/terms-of-sale">Terms of Sale</a></li>
+      </ul>
+    </div>
+  </div>
 </section>

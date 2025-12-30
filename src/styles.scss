@@ -1,6 +1,6 @@
 // Custom Theming for Angular Material
 @use '@angular/material' as mat;
-
+@use './styles/legal';
 html {
   @include mat.theme((
     color: (
@@ -97,7 +97,7 @@ app-footer {
   padding: 10px 16px;
   background: #0f0f0f;
   color: #aaa;
-   font-size: 14px;   /* ⬅ increased from 11px */
+   font-size: 12px;   /* ⬅ increased from 11px */
   text-align: center;
 }
 
