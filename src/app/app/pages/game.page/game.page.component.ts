@@ -52,7 +52,7 @@ export class GamePageComponent implements OnInit {
   didWin = false;
   gameCompleted = false;
   showLegalMenu = false;
-
+ showCoffeeIntro = false;
   // 🆕 Keyboard state tracking
   keyStates: Map<string, CellState> = new Map();
 
@@ -66,9 +66,19 @@ export class GamePageComponent implements OnInit {
   /** 🟦 ON INIT - RESTORE BOARD & CHECK MODAL */
   ngOnInit() {
     const currentDate = new Date().toDateString();
-    
+     const hasSeenCoffeeIntro = sessionStorage.getItem('coffeeIntroSeen');
     console.log('🚀 App initialized at:', currentDate);
-    
+     if (!hasSeenCoffeeIntro) {
+      setTimeout(() => {
+        this.showCoffeeIntro = true;
+        
+        // Hide it after 3 seconds
+        setTimeout(() => {
+          this.showCoffeeIntro = false;
+          sessionStorage.setItem('coffeeIntroSeen', 'true');
+        }, 3000);
+      }, 2000); // Show 2 seconds after page load
+    }
     // 🆕 STEP 1: Check version FIRST (for existing users with stale cache)
     // 📊 Track game start
     this.trackEvent('game_started', {
@@ -109,6 +119,10 @@ export class GamePageComponent implements OnInit {
 
     // 🆕 STEP 8: Setup midnight auto-reset
     this.setupMidnightWatcher();
+  }
+  onCoffeeClick() {
+    // You can add analytics tracking here if needed
+    console.log('Coffee button clicked');
   }
 toggleLegalMenu() {
   this.showLegalMenu = !this.showLegalMenu;
