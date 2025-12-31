@@ -124,6 +124,7 @@ export class GamePageComponent implements OnInit {
     // You can add analytics tracking here if needed
     console.log('Coffee button clicked');
   }
+  
 toggleLegalMenu() {
   this.showLegalMenu = !this.showLegalMenu;
 }
