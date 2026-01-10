@@ -582,6 +582,7 @@ closeLegalMenu() {
 
     if (key === "ENTER" || key === "BACKSPACE") {
       event.preventDefault();
+      event.stopPropagation();
     }
 
     if (key === "ENTER") this.onKey("Enter");
@@ -627,7 +628,21 @@ closeLegalMenu() {
     
     console.log('📊 Stats updated:', stats);
   }
-
+/** ADDITIONAL SAFARI-SPECIFIC FIX: Prevent backspace navigation globally */
+@HostListener('document:keydown', ['$event'])
+preventBackspaceNavigation(event: KeyboardEvent) {
+  // Prevent backspace from navigating back UNLESS user is in an input field
+  if (event.key === 'Backspace') {
+    const target = event.target as HTMLElement;
+    const isInput = target.tagName === 'INPUT' || 
+                    target.tagName === 'TEXTAREA' || 
+                    target.isContentEditable;
+    
+    if (!isInput) {
+      event.preventDefault();
+    }
+  }
+}
   /** 🗓️ LOCK GAME FOR TODAY */
   lockDay() {
     const today = new Date().toDateString();
