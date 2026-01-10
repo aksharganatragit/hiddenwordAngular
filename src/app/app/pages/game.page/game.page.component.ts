@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { NgIf, NgFor, CommonModule } from '@angular/common';
 import { ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
@@ -34,7 +34,7 @@ declare let gtag: Function;
   styleUrls: ['./game.page.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class GamePageComponent implements OnInit {
+export class GamePageComponent implements OnInit, OnDestroy {
   cols = 5;
   rowsCount = 6;
 
@@ -52,12 +52,47 @@ export class GamePageComponent implements OnInit {
   didWin = false;
   gameCompleted = false;
   showLegalMenu = false;
- showCoffeeIntro = false;
+  showCoffeeIntro = false;
+  
   // 🆕 Keyboard state tracking
   keyStates: Map<string, CellState> = new Map();
 
   // 🆕 Version tracking for cache busting
-  private readonly GAME_VERSION = '1.0.2'; // Incremented to force reset
+  private readonly GAME_VERSION = '1.0.2';
+
+  // 🆕 Placeholder animation properties
+  placeholderWord: string = '';
+  showPlaceholder: boolean = true;
+  private placeholderInterval: any;
+
+  // Sample words for placeholder animation
+  private placeholderWords: string[] = [
+    'HELLO',
+    'WORLD',
+    'GAMES',
+    'WORDS',
+    'BRAIN',
+    'THINK',
+    'SMART',
+    'GUESS',
+    'SOLVE',
+    'LEARN',
+    'ENJOY',
+    'PLAYS',
+    'COINS',
+    'BOOST',
+    'MAGIC',
+    'CHARM',
+    'DREAM',
+    'FOCUS',
+    'HAPPY',
+    'LIGHT',
+    'PEACE',
+    'POWER',
+    'QUEST',
+    'SHINE',
+    'SUPER'
+  ];
 
   constructor(private router: Router) {
     // Don't initialize here - do it in ngOnInit after all checks
@@ -66,9 +101,10 @@ export class GamePageComponent implements OnInit {
   /** 🟦 ON INIT - RESTORE BOARD & CHECK MODAL */
   ngOnInit() {
     const currentDate = new Date().toDateString();
-     const hasSeenCoffeeIntro = sessionStorage.getItem('coffeeIntroSeen');
+    const hasSeenCoffeeIntro = sessionStorage.getItem('coffeeIntroSeen');
     console.log('🚀 App initialized at:', currentDate);
-     if (!hasSeenCoffeeIntro) {
+    
+    if (!hasSeenCoffeeIntro) {
       setTimeout(() => {
         this.showCoffeeIntro = true;
         
@@ -79,6 +115,7 @@ export class GamePageComponent implements OnInit {
         }, 3000);
       }, 2000); // Show 2 seconds after page load
     }
+    
     // 🆕 STEP 1: Check version FIRST (for existing users with stale cache)
     // 📊 Track game start
     this.trackEvent('game_started', {
@@ -119,27 +156,82 @@ export class GamePageComponent implements OnInit {
 
     // 🆕 STEP 8: Setup midnight auto-reset
     this.setupMidnightWatcher();
+
+    // 🆕 STEP 9: Start placeholder animation if game hasn't started
+    this.startPlaceholderAnimation();
   }
+
+  ngOnDestroy() {
+    // Clean up placeholder interval when component is destroyed
+    if (this.placeholderInterval) {
+      clearInterval(this.placeholderInterval);
+    }
+  }
+
+  /** 🆕 START PLACEHOLDER ANIMATION */
+  startPlaceholderAnimation() {
+    // Only show placeholder if first row is empty and game hasn't started
+    const firstRowEmpty = this.rows[0]?.cells.every(cell => cell.letter === '');
+    
+    if (this.currentRow === 0 && this.currentCol === 0 && firstRowEmpty && !this.gameOver) {
+      this.showPlaceholder = true;
+      this.cyclePlaceholderWord();
+      
+      // Change word every 2 seconds
+      this.placeholderInterval = setInterval(() => {
+        this.cyclePlaceholderWord();
+      }, 2000);
+    } else {
+      this.showPlaceholder = false;
+    }
+  }
+
+  /** 🆕 CYCLE THROUGH PLACEHOLDER WORDS */
+  cyclePlaceholderWord() {
+    const randomIndex = Math.floor(Math.random() * this.placeholderWords.length);
+    this.placeholderWord = this.placeholderWords[randomIndex];
+  }
+
+  /** 🆕 STOP PLACEHOLDER ANIMATION */
+  stopPlaceholderAnimation() {
+    this.showPlaceholder = false;
+    if (this.placeholderInterval) {
+      clearInterval(this.placeholderInterval);
+      this.placeholderInterval = null;
+    }
+  }
+
+  /** 🆕 GET PLACEHOLDER LETTER FOR CELL */
+  getPlaceholderLetter(rowIndex: number, cellIndex: number): string {
+    if (this.showPlaceholder && rowIndex === 0 && this.placeholderWord) {
+      return this.placeholderWord[cellIndex] || '';
+    }
+    return '';
+  }
+
   onCoffeeClick() {
     // You can add analytics tracking here if needed
     console.log('Coffee button clicked');
   }
   
-toggleLegalMenu() {
-  this.showLegalMenu = !this.showLegalMenu;
-}
-@HostListener('document:click', ['$event'])
-handleDocumentClick(event: MouseEvent) {
-  const target = event.target as HTMLElement;
+  toggleLegalMenu() {
+    this.showLegalMenu = !this.showLegalMenu;
+  }
 
-  // If click is NOT inside the legal menu or trigger → close it
-  if (!target.closest('.legal-menu')) {
+  @HostListener('document:click', ['$event'])
+  handleDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+
+    // If click is NOT inside the legal menu or trigger → close it
+    if (!target.closest('.legal-menu')) {
+      this.showLegalMenu = false;
+    }
+  }
+
+  closeLegalMenu() {
     this.showLegalMenu = false;
   }
-}
-closeLegalMenu() {
-  this.showLegalMenu = false;
-}
+
   /** 🆕 CHECK VERSION AND FORCE RESET IF NEEDED */
   private trackEvent(eventName: string, params?: any) {
     try {
@@ -274,6 +366,9 @@ closeLegalMenu() {
     
     // 🆕 RESET KEYBOARD STATES
     this.keyStates.clear();
+    
+    // 🆕 STOP PLACEHOLDER
+    this.stopPlaceholderAnimation();
     
     console.log('✅ Game data cleared successfully');
   }
@@ -421,6 +516,12 @@ closeLegalMenu() {
   /** KEY ENTRY */
   onKey(key: string) {
     if (this.gameOver) return;
+    
+    // 🆕 Stop placeholder animation when user starts typing
+    if (this.showPlaceholder && this.currentRow === 0) {
+      this.stopPlaceholderAnimation();
+    }
+    
     if (key === 'Enter') return this.submitGuess();
     if (key === 'Backspace') return this.deleteLetter();
 
@@ -434,6 +535,11 @@ closeLegalMenu() {
     if (this.currentCol > 0) {
       this.currentCol--;
       this.rows[this.currentRow].cells[this.currentCol].letter = '';
+      
+      // 🆕 Restart placeholder if first row is now empty
+      if (this.currentRow === 0 && this.currentCol === 0) {
+        this.startPlaceholderAnimation();
+      }
     }
   }
 
@@ -580,14 +686,18 @@ closeLegalMenu() {
   handleKeyPress(event: KeyboardEvent) {
     const key = event.key.toUpperCase();
 
+    // Prevent default for ENTER and BACKSPACE to stop Safari zoom/navigation
     if (key === "ENTER" || key === "BACKSPACE") {
       event.preventDefault();
       event.stopPropagation();
     }
 
-    if (key === "ENTER") this.onKey("Enter");
-    else if (key === "BACKSPACE") this.onKey("Backspace");
-    else if (/^[A-Z]$/.test(key)) this.onKey(key);
+    // Only process game input if game is not over
+    if (!this.gameOver) {
+      if (key === "ENTER") this.onKey("Enter");
+      else if (key === "BACKSPACE") this.onKey("Backspace");
+      else if (/^[A-Z]$/.test(key)) this.onKey(key);
+    }
 
     // Debug shortcut
     if (event.key === "`") {
@@ -601,6 +711,26 @@ closeLegalMenu() {
         gameCompleted: this.gameCompleted
       });
       console.log('Keyboard states:', this.keyStates);
+      console.log('Placeholder state:', {
+        showPlaceholder: this.showPlaceholder,
+        placeholderWord: this.placeholderWord
+      });
+    }
+  }
+
+  /** 🆕 ADDITIONAL SAFARI-SPECIFIC FIX: Prevent backspace navigation globally */
+  @HostListener('document:keydown', ['$event'])
+  preventBackspaceNavigation(event: KeyboardEvent) {
+    // Prevent backspace from navigating back UNLESS user is in an input field
+    if (event.key === 'Backspace') {
+      const target = event.target as HTMLElement;
+      const isInput = target.tagName === 'INPUT' || 
+                      target.tagName === 'TEXTAREA' || 
+                      target.isContentEditable;
+      
+      if (!isInput) {
+        event.preventDefault();
+      }
     }
   }
 
@@ -628,21 +758,7 @@ closeLegalMenu() {
     
     console.log('📊 Stats updated:', stats);
   }
-/** ADDITIONAL SAFARI-SPECIFIC FIX: Prevent backspace navigation globally */
-@HostListener('document:keydown', ['$event'])
-preventBackspaceNavigation(event: KeyboardEvent) {
-  // Prevent backspace from navigating back UNLESS user is in an input field
-  if (event.key === 'Backspace') {
-    const target = event.target as HTMLElement;
-    const isInput = target.tagName === 'INPUT' || 
-                    target.tagName === 'TEXTAREA' || 
-                    target.isContentEditable;
-    
-    if (!isInput) {
-      event.preventDefault();
-    }
-  }
-}
+
   /** 🗓️ LOCK GAME FOR TODAY */
   lockDay() {
     const today = new Date().toDateString();

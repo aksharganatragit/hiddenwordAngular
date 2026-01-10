@@ -7,7 +7,7 @@
     <button class="help-icon" (click)="openHelp()" aria-label="Help">
       <span class="icon-content">?</span>
     </button>
-    <div class="coffee-container">
+    <div class="coffee-container" [class.show-tooltip-intro]="showCoffeeIntro">
       <a
         href="https://www.paypal.com/ncp/payment/SARGRY5MCPJKG"
         target="_blank"
@@ -75,9 +75,18 @@
                 [class.correct]="cell.state === 'correct'"
                 [class.present]="cell.state === 'present'"
                 [class.absent]="cell.state === 'absent'"
-                [class.active]="ri === currentRow && ci === currentCol" 
+                [class.active]="ri === currentRow && ci === currentCol"
+                [class.placeholder]="showPlaceholder && ri === 0 && !cell.letter"
               >
-                {{ cell.letter || '' }}
+                <!-- Show actual letter if exists, otherwise show placeholder -->
+                <span class="tile-letter" [class.has-letter]="cell.letter">
+                  {{ cell.letter || '' }}
+                </span>
+                
+                <!-- Placeholder letter (blurred, behind actual letter) -->
+                <span class="tile-placeholder" *ngIf="showPlaceholder && ri === 0 && !cell.letter">
+                  {{ getPlaceholderLetter(ri, ci) }}
+                </span>
               </div>
             </div>
           </div>
