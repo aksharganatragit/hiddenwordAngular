@@ -15,6 +15,7 @@ export class EndModalComponent implements OnInit {
   @Input() secretWord: string = '';
   @Input() gameCompleted: boolean = false;
   @Input() rows: any[] = []; // ✅ REQUIRED for sharing!
+  @Input() score: number = 0; // 🆕 SCORE INPUT
 
   stats: any = {};
   countdownText: string = '';
@@ -62,7 +63,7 @@ export class EndModalComponent implements OnInit {
     this.close.emit();
   }
 
-  /** 🔗 SHARE RESULT (Fixed to work with your row structure) **/
+  /** 🔗 SHARE RESULT (with Score and Stats) **/
   shareResult() {
     const domain = 'https://hiddenword.co';
 
@@ -95,10 +96,15 @@ export class EndModalComponent implements OnInit {
     const resultTitle = this.didWin ? '✅ WIN' : '❌ LOSS';
     const attempts = filledRows.length;
 
+    // 🆕 Include score and all statistics in share text
     const shareText =
       `Hidden Word ${resultTitle}\n` +
-      `Attempts: ${attempts}/6\n\n` +
+      `Attempts: ${attempts}/6` +
       `${emojiGrid}\n\n` +
+      `📊 Statistics:\n` +
+      `Played: ${this.stats.played} | Wins: ${this.stats.wins}\n` +
+      `Win %: ${this.stats.winPercent}% | Streak: ${this.stats.streak} 🔥\n` +
+      `Max Streak: ${this.stats.maxStreak}\n\n` +
       `Play at: ${domain}`;
 
     // Try to use the modern share API first, fallback to clipboard
