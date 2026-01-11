@@ -177,10 +177,10 @@ export class GamePageComponent implements OnInit, OnDestroy {
       this.showPlaceholder = true;
       this.cyclePlaceholderWord();
       
-      // Change word every 2 seconds
+      // Change word every 4 seconds (to match the full animation cycle)
       this.placeholderInterval = setInterval(() => {
         this.cyclePlaceholderWord();
-      }, 2000);
+      }, 4000);
     } else {
       this.showPlaceholder = false;
     }
@@ -681,13 +681,51 @@ export class GamePageComponent implements OnInit, OnDestroy {
     localStorage.setItem("board_state", JSON.stringify(board));
   }
 
-  /** LISTEN TO KEYBOARD */
-  @HostListener("window:keydown", ["$event"])
+  /** 🔧 PREVENT ALL BACKSPACE NAVIGATION - COMPREHENSIVE FIX */
+  @HostListener('window:keydown', ['$event'])
+  preventBackspaceGlobally(event: KeyboardEvent): boolean | void {
+    // Block backspace from causing browser navigation or zoom on ALL elements
+    if (event.key === 'Backspace' || event.keyCode === 8) {
+      const target = event.target as HTMLElement;
+      const tagName = target.tagName.toUpperCase();
+      
+      // Only allow backspace in actual input fields or editable content
+      const isEditableField = 
+        tagName === 'INPUT' || 
+        tagName === 'TEXTAREA' || 
+        target.isContentEditable ||
+        target.getAttribute('contenteditable') === 'true';
+      
+      // If NOT in an editable field, prevent default behavior
+      if (!isEditableField) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        
+        // Process game backspace
+        if (!this.gameOver) {
+          this.onKey('Backspace');
+        }
+        
+        return false;
+      }
+    }
+    
+    return true;
+  }
+
+  /** LISTEN TO KEYBOARD FOR GAME INPUT */
+  @HostListener("document:keydown", ["$event"])
   handleKeyPress(event: KeyboardEvent) {
+    // Don't process if already handled by preventBackspaceGlobally
+    if (event.key === 'Backspace' || event.keyCode === 8) {
+      return; // Already handled above
+    }
+    
     const key = event.key.toUpperCase();
 
-    // Prevent default for ENTER and BACKSPACE to stop Safari zoom/navigation
-    if (key === "ENTER" || key === "BACKSPACE") {
+    // Prevent default for ENTER
+    if (key === "ENTER") {
       event.preventDefault();
       event.stopPropagation();
     }
@@ -695,8 +733,10 @@ export class GamePageComponent implements OnInit, OnDestroy {
     // Only process game input if game is not over
     if (!this.gameOver) {
       if (key === "ENTER") this.onKey("Enter");
-      else if (key === "BACKSPACE") this.onKey("Backspace");
-      else if (/^[A-Z]$/.test(key)) this.onKey(key);
+      else if (/^[A-Z]$/.test(key)) {
+        event.preventDefault();
+        this.onKey(key);
+      }
     }
 
     // Debug shortcut
@@ -715,22 +755,6 @@ export class GamePageComponent implements OnInit, OnDestroy {
         showPlaceholder: this.showPlaceholder,
         placeholderWord: this.placeholderWord
       });
-    }
-  }
-
-  /** 🆕 ADDITIONAL SAFARI-SPECIFIC FIX: Prevent backspace navigation globally */
-  @HostListener('document:keydown', ['$event'])
-  preventBackspaceNavigation(event: KeyboardEvent) {
-    // Prevent backspace from navigating back UNLESS user is in an input field
-    if (event.key === 'Backspace') {
-      const target = event.target as HTMLElement;
-      const isInput = target.tagName === 'INPUT' || 
-                      target.tagName === 'TEXTAREA' || 
-                      target.isContentEditable;
-      
-      if (!isInput) {
-        event.preventDefault();
-      }
     }
   }
 
