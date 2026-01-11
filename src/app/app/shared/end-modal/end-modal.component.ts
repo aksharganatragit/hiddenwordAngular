@@ -99,13 +99,13 @@ export class EndModalComponent implements OnInit {
     // 🆕 Include score and all statistics in share text
     const shareText =
       `Hidden Word ${resultTitle}\n` +
-      `Attempts: ${attempts}/6` +
+      `Attempts: ${attempts}/6\n` +
       `${emojiGrid}\n\n` +
       `📊 Statistics:\n` +
       `Played: ${this.stats.played} | Wins: ${this.stats.wins}\n` +
       `Win %: ${this.stats.winPercent}% | Streak: ${this.stats.streak} 🔥\n` +
       `Max Streak: ${this.stats.maxStreak}\n\n` +
-      `Play at: ${domain}`;
+      `Play: ${domain}`;
 
     // Try to use the modern share API first, fallback to clipboard
     if (navigator.share) {
