@@ -1,3 +1,4 @@
+
 :root {
   --tile-size: min(65px, 14vh, 15vw);
   --gap-size: 5px;
@@ -20,7 +21,13 @@
 
 /* Global resets */
 * { 
-  box-sizing: border-box; 
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 html, body { 
@@ -29,7 +36,12 @@ html, body {
   width: 100%; 
   height: 100%; 
   background: #000;
-  overflow: visible; 
+  overflow: visible;
+  touch-action: pan-x pan-y;
+  -ms-touch-action: pan-x pan-y;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 .game-root { 
@@ -40,6 +52,8 @@ html, body {
   width: 100%; 
   overflow: visible; 
   background: #000;
+  touch-action: pan-x pan-y;
+  -ms-touch-action: pan-x pan-y;
 }
 
 /* ===== HEADER ===== */
@@ -104,6 +118,8 @@ html, body {
   outline: none;
   filter: grayscale(0);
   position: relative;
+  touch-action: manipulation;
+  -ms-touch-action: manipulation;
 }
 
 /* Subtle pulse ring for mobile to draw attention */
@@ -272,6 +288,8 @@ html, body {
   cursor: pointer;
   transition: all 180ms ease;
   outline: none;
+  touch-action: manipulation;
+  -ms-touch-action: manipulation;
 }
 
 /* ======================================================= */
@@ -356,6 +374,8 @@ html, body {
   cursor: pointer;
   transition: all 180ms ease;
   outline: none;
+  touch-action: manipulation;
+  -ms-touch-action: manipulation;
 }
 
 /* hover/active for pointer devices */
@@ -521,6 +541,10 @@ html, body {
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  touch-action: manipulation;
+  -ms-touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 /* 🆕 PLACEHOLDER STYLING */
@@ -552,33 +576,82 @@ html, body {
   justify-content: center;
   align-items: center;
   z-index: 1;
-  color: rgba(255, 255, 255, 0.3);
-  filter: blur(2px);
+  color: rgba(255, 255, 255, 0.35);
+  filter: blur(1.5px);
   font-size: calc(var(--tile-size) * 0.6);
   font-weight: 900;
   text-transform: uppercase;
-  animation: placeholderPulse 2s ease-in-out infinite;
   pointer-events: none;
+  opacity: 0;
 }
 
-@keyframes placeholderPulse {
-  0%, 100% {
-    opacity: 0.3;
-    filter: blur(2px);
+/* 🆕 TYPING ANIMATION - Each letter appears one by one */
+.tiles .tile:nth-child(1) .tile-placeholder {
+  animation: typeIn 0.3s ease-out 0.2s forwards, 
+             typeOut 0.3s ease-in 3.5s forwards;
+}
+
+.tiles .tile:nth-child(2) .tile-placeholder {
+  animation: typeIn 0.3s ease-out 0.5s forwards, 
+             typeOut 0.3s ease-in 3.3s forwards;
+}
+
+.tiles .tile:nth-child(3) .tile-placeholder {
+  animation: typeIn 0.3s ease-out 0.8s forwards, 
+             typeOut 0.3s ease-in 3.1s forwards;
+}
+
+.tiles .tile:nth-child(4) .tile-placeholder {
+  animation: typeIn 0.3s ease-out 1.1s forwards, 
+             typeOut 0.3s ease-in 2.9s forwards;
+}
+
+.tiles .tile:nth-child(5) .tile-placeholder {
+  animation: typeIn 0.3s ease-out 1.4s forwards, 
+             typeOut 0.3s ease-in 2.7s forwards;
+}
+
+/* Type in animation - letter appears with slight scale */
+@keyframes typeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+    filter: blur(3px);
   }
-  50% {
-    opacity: 0.5;
+  100% {
+    opacity: 1;
+    transform: scale(1);
     filter: blur(1.5px);
   }
 }
 
-/* 🆕 FADE IN/OUT ANIMATION for placeholder word changes */
-@keyframes placeholderFade {
-  0%, 100% {
-    opacity: 0;
+/* Type out animation - backspace effect */
+@keyframes typeOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(1.5px);
   }
-  10%, 90% {
-    opacity: 0.3;
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+    filter: blur(3px);
+  }
+}
+
+/* Optional: Add a subtle pulse while visible */
+.tile-placeholder {
+  animation: typeIn 0.3s ease-out forwards, 
+             placeholderPulse 2s ease-in-out 1.5s infinite,
+             typeOut 0.3s ease-in 3.5s forwards;
+}
+
+@keyframes placeholderPulse {
+  0%, 100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.5;
   }
 }
 
@@ -624,6 +697,8 @@ html, body {
   height: var(--keyboard-height);
   align-items: center;
   overflow: hidden;
+  touch-action: manipulation;
+  -ms-touch-action: manipulation;
 }
 
 .keyboard {
@@ -662,6 +737,10 @@ html, body {
   align-items:center; 
   justify-content:center;
   transition: all 0.2s ease;
+  touch-action: manipulation;
+  -ms-touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
 }
 .key:active { 
   background:#565758;
@@ -833,7 +912,6 @@ html, body {
     font-size: clamp(10px, 2vw, 14px);
   }
 }
-
 /* ===============================
    LEGAL DROPDOWN (GAME HEADER)
 =============================== */
