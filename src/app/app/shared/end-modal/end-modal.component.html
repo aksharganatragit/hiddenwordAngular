@@ -32,7 +32,9 @@
 
   <h1>{{ countdownText }}</h1>
 
-  <button class="share-btn" (click)="shareResult()">🔗 SHARE</button>
+  <!-- 🆕 VIBRANT COPY TO CLIPBOARD BUTTON -->
+  <button class="copy-btn" [class.win]="didWin && gameCompleted" (click)="copyResultToClipboard()">📋 COPY TO CLIPBOARD</button>
 
+  <button class="share-btn" (click)="shareResult()">🔗 SHARE</button>
 
 </div>

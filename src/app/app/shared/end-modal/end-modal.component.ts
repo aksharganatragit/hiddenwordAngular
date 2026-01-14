@@ -63,14 +63,42 @@ export class EndModalComponent implements OnInit {
     this.close.emit();
   }
 
+  /** 📋 COPY RESULT TO CLIPBOARD DIRECTLY **/
+  copyResultToClipboard() {
+    const shareText = this.generateShareText();
+    if (shareText) {
+      this.copyToClipboard(shareText);
+    }
+  }
+
   /** 🔗 SHARE RESULT (with Score and Stats) **/
   shareResult() {
+    const shareText = this.generateShareText();
+    if (!shareText) return;
+
+    // Try to use the modern share API first, fallback to clipboard
+    if (navigator.share) {
+      navigator.share({
+        title: 'Hidden Word',
+        text: shareText
+      }).catch(() => {
+        // If share fails, copy to clipboard
+        this.copyToClipboard(shareText);
+      });
+    } else {
+      // Fallback to clipboard
+      this.copyToClipboard(shareText);
+    }
+  }
+
+  /** 🆕 GENERATE SHARE TEXT (reusable method) **/
+  generateShareText(): string | null {
     const domain = 'https://hiddenword.co';
 
     // Check if game was completed
     if (!this.gameCompleted) {
       alert('Complete the game first to share your result!');
-      return;
+      return null;
     }
 
     // Filter rows that have at least one filled cell
@@ -80,7 +108,7 @@ export class EndModalComponent implements OnInit {
 
     if (filledRows.length === 0) {
       alert('Nothing to share yet!');
-      return;
+      return null;
     }
 
     // Generate emoji grid based on cell states
@@ -96,9 +124,8 @@ export class EndModalComponent implements OnInit {
     const resultTitle = this.didWin ? '✅ WIN' : '❌ LOSS';
     const attempts = filledRows.length;
 
-    // 🆕 Include score and all statistics in share text
-    const shareText =
-      `Hidden Word ${resultTitle}\n` +
+    // Include score and all statistics in share text
+    return `Hidden Word ${resultTitle}\n` +
       `Attempts: ${attempts}/6\n` +
       `${emojiGrid}\n\n` +
       `📊 Statistics:\n` +
@@ -106,20 +133,6 @@ export class EndModalComponent implements OnInit {
       `Win %: ${this.stats.winPercent}% | Streak: ${this.stats.streak} 🔥\n` +
       `Max Streak: ${this.stats.maxStreak}\n\n` +
       `Play: ${domain}`;
-
-    // Try to use the modern share API first, fallback to clipboard
-    if (navigator.share) {
-      navigator.share({
-        title: 'Hidden Word',
-        text: shareText
-      }).catch(() => {
-        // If share fails, copy to clipboard
-        this.copyToClipboard(shareText);
-      });
-    } else {
-      // Fallback to clipboard
-      this.copyToClipboard(shareText);
-    }
   }
 
   /** 📋 Copy to clipboard helper **/
