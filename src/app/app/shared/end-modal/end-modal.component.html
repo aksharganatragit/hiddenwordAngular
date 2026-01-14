@@ -18,6 +18,13 @@
     <p class="encourage-text">Better luck tomorrow! 💪</p>
   </div>
 
+  <!-- 🆕 SHOW SECRET WORD IN GREEN WHEN USER WINS -->
+  <div *ngIf="gameCompleted && didWin" class="secret-word-reveal win">
+    <p class="reveal-text">The word was:</p>
+    <div class="secret-word">{{ secretWord }}</div>
+    <p class="encourage-text">Great job! 🎉</p>
+  </div>
+
   <!-- 🆕 ONLY SHOW "Statistics" HEADER IF GAME WAS COMPLETED -->
   <h3 *ngIf="gameCompleted">Statistics</h3>
 

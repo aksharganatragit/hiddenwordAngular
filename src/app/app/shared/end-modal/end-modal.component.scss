@@ -70,6 +70,12 @@
   margin: 15px 0 25px;
 }
 
+/* 🆕 GREEN VARIANT FOR WIN STATE */
+.secret-word-reveal.win {
+  background: rgba(16, 185, 129, 0.15);
+  border: 2px solid rgba(16, 185, 129, 0.4);
+}
+
 .reveal-text {
   font-size: 14px;
   opacity: 0.8;
@@ -86,9 +92,25 @@
   animation: glow 2s ease-in-out infinite;
 }
 
+/* 🆕 GREEN TEXT FOR WIN STATE */
+.secret-word-reveal.win .secret-word {
+  color: #10b981;
+  text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
 @keyframes glow {
   0%, 100% { text-shadow: 0 0 10px rgba(255, 77, 77, 0.5); }
   50% { text-shadow: 0 0 20px rgba(255, 77, 77, 0.8); }
+}
+
+/* 🆕 GREEN GLOW ANIMATION FOR WIN STATE */
+.secret-word-reveal.win .secret-word {
+  animation: glow-green 2s ease-in-out infinite;
+}
+
+@keyframes glow-green {
+  0%, 100% { text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
+  50% { text-shadow: 0 0 20px rgba(16, 185, 129, 0.8); }
 }
 
 .encourage-text {
